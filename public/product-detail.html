@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Loading Product...</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <style>
+    /* Your original CSS remains exactly the same */
+    /* Core Styling */
+    body {
+      background-color: #0b0b0b;
+      min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      color: #e0e0e0;
+    }
+
+    .product-detail-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+
+    .product-image-section {
+      background: #121212;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      margin-bottom: 2rem;
+    }
+
+    .main-image {
+      width: 100%;
+      max-height: 500px;
+      object-fit: contain;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .thumbnail-container {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .thumbnail {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .thumbnail:hover,
+    .thumbnail.active {
+      border-color: #fff;
+      transform: scale(1.02);
+    }
+
+    .product-info-section {
+      background: #121212;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      height: fit-content;
+      margin-bottom: 2rem;
+    }
+
+    .product-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+
+    .product-category {
+      display: inline-block;
+      background: #333;
+      color: #ccc;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .price-section {
+      margin: 1.5rem 0;
+    }
+
+    .actual-price {
+      font-size: 1.2rem;
+      color: #999;
+      text-decoration: line-through;
+      margin-right: 10px;
+    }
+
+    .offer-price {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .discount-badge {
+      background: #d32f2f;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      margin-left: 10px;
+    }
+
+    .product-description {
+      line-height: 1.6;
+      color: #ccc;
+      margin: 1.5rem 0;
+    }
+
+    /* Description Read More/Less */
+    .description-container .description-text {
+      line-height: 1.6;
+      color: #ccc;
+    }
+
+    .read-more-btn {
+      background: transparent;
+      border: none;
+      color: #667eea;
+      font-weight: 600;
+      padding: 5px 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
+    }
+
+    .read-more-btn:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+
+    /* Size Selection Section - Only for Jackets */
+    .size-section {
+      margin: 1.5rem 0;
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .size-label {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .size-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .size-chip {
+      background: #2c2c2c;
+      color: #adb5bd;
+      border: 1px solid #495057;
+      padding: 10px 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      min-width: 45px;
+      text-align: center;
+    }
+
+    .size-chip:hover {
+      background: #444;
+      color: #fff;
+      border-color: #666;
+    }
+
+    .size-chip.active {
+      background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .size-info {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #adb5bd;
+    }
+
+    .quantity-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 1.5rem 0;
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .quantity-btn {
+      background: #333;
+      color: #fff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .quantity-btn:hover {
+      background: #444;
+      transform: scale(1.05);
+    }
+
+    .quantity-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .quantity-input {
+      width: 60px;
+      text-align: center;
+      background: #2c2c2c;
+      color: #fff;
+      border: 1px solid #495057;
+      border-radius: 8px;
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    .size-chart-link {
+      color: #667eea;
+      text-decoration: none;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 5px;
+    }
+
+    .size-chart-link:hover {
+      color: #764ba2;
+      text-decoration: underline;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 2rem;
+    }
+
+    .btn-cart {
+      flex: 1;
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid #444;
+      border-radius: 30px;
+      font-weight: 600;
+      padding: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cart:hover {
+      background: #222;
+      border-color: #888;
+    }
+
+    .btn-buy {
+      flex: 1;
+      background: #000000;
+      color: white;
+      border: 1px solid #333;
+      border-radius: 30px;
+      font-weight: 600;
+      padding: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-buy:hover {
+      background: #111;
+      box-shadow: 0 7px 20px rgba(255, 255, 255, 0.05);
+    }
+
+    .btn-customize {
+      flex: 1;
+      background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-weight: 600;
+      padding: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-customize:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    .loading-spinner {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 400px;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #222;
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .error-container {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #777;
+    }
+
+    .error-container i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      color: #d32f2f;
+    }
+
+    .back-button {
+      background: transparent;
+      color: #ccc;
+      border: 1px solid #444;
+      border-radius: 30px;
+      padding: 8px 20px;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .back-button:hover {
+      background: #222;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .breadcrumb {
+      background: transparent;
+      padding: 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .breadcrumb-item a {
+      color: #999;
+      text-decoration: none;
+    }
+
+    .breadcrumb-item.active {
+      color: #fff;
+    }
+
+    /* Toast notification */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1055;
+    }
+
+    .toast {
+      background: #121212;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .toast-header {
+      background: #1e1e1e;
+      border-bottom: 1px solid #333;
+      color: #fff;
+    }
+
+    .btn-close-white {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+
+    /* Customizer Section */
+    .customizer-section {
+      background: #121212;
+      border-radius: 12px;
+      padding: 0;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      margin-top: 2rem;
+      display: none;
+    }
+
+    .customizer-header {
+      background: linear-gradient(135deg, #1e1e1e 0%, #2c2c2c 100%);
+      padding: 1rem 2rem;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .customizer-header h3 {
+      margin: 0;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .customizer-toggle {
+      background: transparent;
+      border: none;
+      color: #ccc;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .customizer-toggle:hover {
+      background: #333;
+      color: #fff;
+    }
+
+    .studio-shell {
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 20px;
+      padding: 1rem;
+      margin: 0;
+    }
+
+    .canvas-panel {
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brand-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f8f9fa;
+      margin: 0;
+    }
+
+    .muted {
+      color: #adb5bd !important;
+      font-size: 13px;
+    }
+
+    .view-toggle button {
+      border: 0;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      color: #adb5bd;
+      background: transparent;
+    }
+
+    .view-toggle button.active {
+      background: #343a40;
+      color: #f8f9fa;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    }
+
+    .canvas-wrap {
+      padding: 18px;
+      border-radius: 12px;
+      background-color: #212529;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    svg {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      display: block;
+      stroke: #f8f9fa;
+    }
+
+    .controls-panel .card {
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+      color: #f8f9fa;
+      margin-bottom: 1rem;
+    }
+
+    select, input[type="number"], input[type="range"] {
+      background: #2c2c2c;
+      color: #f8f9fa;
+      border: 1px solid #495057;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    select:focus, input[type="number"]:focus, input[type="range"]:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+      border-color: #667eea;
+    }
+
+    .chips .chip {
+      background: #2c2c2c;
+      color: #adb5bd;
+      border: 1px solid #495057;
+      padding: 8px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 2px;
+    }
+
+    .chips .chip.active {
+      background: #495057;
+      color: #f8f9fa;
+      border-color: transparent;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .btn-customizer-action {
+      background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-weight: 600;
+      width: 100%;
+      margin-top: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-customizer-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    /* Size Chart - Only for Jackets */
+    .size-chart-section {
+      background: #121212;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      margin-top: 2rem;
+    }
+
+    .size-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    .size-table th,
+    .size-table td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #333;
+      color: #e0e0e0;
+    }
+
+    .size-table th {
+      background: #1e1e1e;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .size-table tr:nth-child(even) {
+      background: #1a1a1a;
+    }
+
+    .size-table tr:hover {
+      background: #222;
+    }
+
+    .general-info-section {
+      background: #121212;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      margin-top: 2rem;
+    }
+
+    .general-info-section h5 {
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .product-title {
+        font-size: 1.5rem;
+      }
+      
+      .offer-price {
+        font-size: 1.6rem;
+      }
+
+      .studio-shell {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .canvas-wrap {
+        order: 2;
+      }
+
+      .quantity-section {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .size-chips {
+        justify-content: start;
+      }
+
+      .size-chip {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+        min-width: 40px;
+      }
+
+      .size-table {
+        font-size: 0.9rem;
+      }
+
+      .size-table th,
+      .size-table td {
+        padding: 8px 4px;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .studio-shell { 
+        grid-template-columns: 1fr; 
+        gap: 12px; 
+      }
+      .canvas-wrap { 
+        order: 2; 
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container-fluid">
+    <div class="product-detail-container">
+      <div id="productDetailContent">
+        <div class="loading-spinner">
+          <div class="spinner"></div>
+          <div class="ms-3">Loading product details...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast-container">
+    <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i class="fas fa-shopping-cart me-2"></i>
+        <strong class="me-auto">Cart</strong>
+        <small>Just now</small>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastMessage">
+        Product added to cart!
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Chart Modal - Only for Jackets -->
+  <div class="modal fade" id="sizeChartModal" tabindex="-1" aria-labelledby="sizeChartLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="background: #121212; color: #e0e0e0; border: none;">
+        <div class="modal-header" style="border-bottom: 1px solid #333;">
+          <h5 class="modal-title" id="sizeChartLabel" style="color: #fff;">Jacket Size Chart</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="size-table">
+              <thead>
+                <tr>
+                  <th>Size</th>
+                  <th>Chest (cm)</th>
+                  <th>Length (cm)</th>
+                  <th>Sleeve (cm)</th>
+                  <th>Shoulder (cm)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>XS</td>
+                  <td>88-92</td>
+                  <td>64</td>
+                  <td>60</td>
+                  <td>42</td>
+                </tr>
+                <tr>
+                  <td>S</td>
+                  <td>92-96</td>
+                  <td>66</td>
+                  <td>61</td>
+                  <td>44</td>
+                </tr>
+                <tr>
+                  <td>M</td>
+                  <td>96-102</td>
+                  <td>68</td>
+                  <td>62</td>
+                  <td>46</td>
+                </tr>
+                <tr>
+                  <td>L</td>
+                  <td>102-108</td>
+                  <td>70</td>
+                  <td>63</td>
+                  <td>48</td>
+                </tr>
+                <tr>
+                  <td>XL</td>
+                  <td>108-114</td>
+                  <td>72</td>
+                  <td>64</td>
+                  <td>50</td>
+                </tr>
+                <tr>
+                  <td>2XL</td>
+                  <td>114-120</td>
+                  <td>74</td>
+                  <td>65</td>
+                  <td>52</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-3 text-white small">
+            <p><strong>Note:</strong> Measurements are in centimeters. Chest measurement is around the fullest part. For custom sizing, use the customizer or contact support.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="/common.js"></script>
+  <script>
+    AOS.init();
+
+    // Function to get URL parameters
+    function getUrlParameter(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    // Function to escape HTML
+    function escapeHtml(text) {
+      const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+      };
+      return text.replace(/[&<>"']/g, m => map[m]);
+    }
+
+    // Function to calculate discount percentage
+    function calculateDiscount(actualPrice, offerPrice) {
+      if (!actualPrice || actualPrice <= offerPrice) return 0;
+      return Math.round(((actualPrice - offerPrice) / actualPrice) * 100);
+    }
+
+    // Function to truncate text to specific character counts
+    function truncateDescription(text) {
+      const shortLength = 200;
+      const longLength = 510; // Total characters to show when expanded
+      
+      if (!text || text.length <= shortLength) {
+        return {
+          shortText: text,
+          longText: text,
+          needsTruncation: false
+        };
+      }
+      
+      // Get first 200 characters for short version
+      const shortText = text.substring(0, shortLength) + '...';
+      
+      // Get up to 500 characters for long version
+      const longText = text.length > longLength ? text.substring(0, longLength) + '...' : text;
+      
+      return {
+        shortText: shortText,
+        longText: longText,
+        needsTruncation: true
+      };
+    }
+
+    // Cart management functions
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function showToast(message) {
+      const toastMessage = document.getElementById('toastMessage');
+      const cartToast = new bootstrap.Toast(document.getElementById('cartToast'));
+      
+      toastMessage.textContent = message;
+      cartToast.show();
+    }
+
+    // Size selection management - Only for jackets
+    let selectedSize = '';
+    const availableSizes = ['XS', 'S', 'M', 'L', 'XL', '2XL'];
+
+    function initSizeSelection() {
+      // Only initialize if size chips exist (jacket products)
+      const sizeChips = document.querySelectorAll('.size-chip');
+      if (sizeChips.length === 0) return;
+
+      // Add event listeners to size chips
+      sizeChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          // Remove active class from all chips
+          sizeChips.forEach(c => c.classList.remove('active'));
+          // Add active class to clicked chip
+          this.classList.add('active');
+          selectedSize = this.textContent.trim();
+          updateSizeDisplay();
+          console.log('Selected size:', selectedSize);
+        });
+      });
+
+      // Set default size to M
+      const defaultChip = document.querySelector('.size-chip[data-size="M"]');
+      if (defaultChip) {
+        defaultChip.classList.add('active');
+        selectedSize = 'M';
+        updateSizeDisplay();
+      }
+    }
+
+    function updateSizeDisplay() {
+      const display = document.getElementById('currentSizeDisplay');
+      if (display) {
+        display.textContent = selectedSize || 'Select size';
+      }
+    }
+
+    // Quantity management
+    let currentQuantity = 1;
+
+    function updateQuantity(change) {
+      const qtyInput = document.getElementById('quantityInput');
+      if (!qtyInput) return;
+      
+      currentQuantity = Math.max(1, Math.min(99, currentQuantity + change));
+      qtyInput.value = currentQuantity;
+    }
+
+    // Description toggle functionality
+    function toggleDescription(button) {
+      const descriptionContainer = button.closest('.description-container');
+      const descriptionText = descriptionContainer.querySelector('.description-text');
+      const isExpanded = descriptionContainer.classList.contains('expanded');
+      
+      if (isExpanded) {
+        // Collapse - show short text
+        descriptionText.textContent = descriptionContainer.dataset.shortText;
+        descriptionContainer.classList.remove('expanded');
+        button.innerHTML = '<i class="fas fa-chevron-down me-1"></i> Read More';
+      } else {
+        // Expand - show long text
+        descriptionText.textContent = descriptionContainer.dataset.longText;
+        descriptionContainer.classList.add('expanded');
+        button.innerHTML = '<i class="fas fa-chevron-up me-1"></i> Read Less';
+      }
+    }
+
+    // Main function to load product details
+    async function loadProductDetail() {
+      try {
+        // Get product ID from URL parameters
+        const productId = getUrlParameter('id');
+        const productTitle = getUrlParameter('title');
+        
+        if (!productId) {
+          throw new Error('Product ID not specified in URL');
+        }
+
+        // Fetch product details using public API
+        const product = await publicApiGet(`/products/public/${productId}`);
+        
+        if (!product) {
+          throw new Error('Product not found in database');
+        }
+
+        // Store product data globally
+        window.product = product;
+        window.productPrice = product.offerPrice || product.actualPrice || 0;
+
+        // Calculate discount
+        const discount = calculateDiscount(product.actualPrice, product.offerPrice || product.actualPrice);
+        
+        // Check if it's a jacket product
+        const isJacketProduct = product.category && product.category.toLowerCase().includes('jacket');
+        
+        // Generate breadcrumb
+        const breadcrumbHtml = `
+          <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="/shop.html" style="color: #999; text-decoration: none;">Shop</a></li>
+              <li class="breadcrumb-item active">${escapeHtml(product.title)}</li>
+            </ol>
+          </nav>
+        `;
+
+        // Size section - Only for jackets
+        const sizeSection = isJacketProduct ? `
+          <div class="size-section">
+            <label class="size-label">Select Size:</label>
+            <div class="size-chips">
+              ${availableSizes.map(size => `
+                <div class="size-chip" data-size="${size}">${size}</div>
+              `).join('')}
+            </div>
+            <a href="#" class="size-chart-link" data-bs-toggle="modal" data-bs-target="#sizeChartModal">
+              <i class="fas fa-ruler-combined me-2"></i>View Size Chart
+            </a>
+          </div>
+        ` : '';
+
+        // Quantity section
+        const quantitySection = `
+          <div class="quantity-section">
+            <label class="form-label mb-0">Quantity:</label>
+            <div class="d-flex align-items-center gap-2">
+              <button class="quantity-btn" id="qtyMinus">−</button>
+              <input type="int" id="quantityInput" class="quantity-input" value="1" min="1" max="99">
+              <button class="quantity-btn" id="qtyPlus">+</button>
+            </div>
+          </div>
+        `;
+
+        // Customize button - Only for jackets
+        const customizeButton = isJacketProduct ? `
+          <button class="btn btn-customize" onclick="toggleCustomizer()">
+            <i class="fas fa-tshirt me-2"></i> Customize Jacket
+          </button>
+        ` : '';
+
+        // Prepare description with read more functionality
+        const fullDescription = product.description || 'No description available.';
+        const { shortText, longText, needsTruncation } = truncateDescription(fullDescription);
+        
+        const descriptionHtml = needsTruncation ? `
+          <div class="description-container" data-short-text="${escapeHtml(shortText)}" data-long-text="${escapeHtml(longText)}">
+            <div class="description-text">
+              ${escapeHtml(shortText)}
+            </div>
+            <button class="read-more-btn" onclick="toggleDescription(this)">
+              <i class="fas fa-chevron-down me-1"></i> Read More
+            </button>
+          </div>
+        ` : `
+          <div class="description-container">
+            <div class="description-text">
+              ${escapeHtml(fullDescription)}
+            </div>
+          </div>
+        `;
+
+        const productHtml = `
+          ${breadcrumbHtml}
+          <div class="row">
+            <div class="col-lg-6 mb-4">
+              <div class="product-image-section">
+                <img id="mainProductImage" 
+                     src="${(product.images && product.images.length > 0 ? product.images[0] : product.imageUrl) || '/placeholder.png'}" 
+                     alt="${escapeHtml(product.title)}" 
+                     class="main-image" 
+                     onerror="this.src='/placeholder.png'">
+
+                <div class="thumbnail-container">
+                  ${
+                    (product.images && product.images.length > 0
+                      ? product.images.map((img, i) => `
+                          <img src="${img}" 
+                               alt="${escapeHtml(product.title)}" 
+                               class="thumbnail ${i === 0 ? 'active' : ''}" 
+                               onclick="changeMainImage('${img}', '${escapeHtml(product.title)}')" 
+                               onerror="this.src='/placeholder.png'">
+                        `).join('')
+                      : `
+                          <img src="${product.imageUrl || '/placeholder.png'}"
+                               alt="${escapeHtml(product.title)}"
+                               class="thumbnail active"
+                               onclick="changeMainImage('${product.imageUrl || '/placeholder.png'}', '${escapeHtml(product.title)}')"
+                               onerror="this.src='/placeholder.png'">
+                        `
+                    )
+                  }
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-lg-6">
+              <div class="product-info-section">
+                <h1 class="product-title" style="text-transform:uppercase;">${escapeHtml(product.title)}</h1>
+                ${product.category ? `<span class="product-category">${escapeHtml(product.category)}</span>` : ''}
+                
+                <div class="price-section">
+                  ${product.actualPrice && product.actualPrice > (product.offerPrice || product.actualPrice) ? 
+                    `<span class="actual-price">₹${product.actualPrice}</span>` : ''}
+                  <span class="offer-price">₹${product.offerPrice || product.actualPrice}</span>
+                  ${discount > 0 ? `<span class="discount-badge">${discount}% OFF</span>` : ''}
+                </div>
+                
+                <div class="product-description">
+                  ${descriptionHtml}
+                </div>
+
+                ${sizeSection}
+                ${quantitySection}
+
+                <div class="action-buttons">
+                  ${customizeButton}
+                  <button class="btn btn-cart" onclick="addToCart('${product._id}')">
+                    <i class="fas fa-shopping-cart me-2"></i> Add to Cart
+                  </button>
+                </div>
+
+                <div class="mt-3 text-center">
+                  <a href="/cart.html" class="text-decoration-none">
+                    <i class="fas fa-shopping-cart me-1"></i> 
+                    <span id="cartCount">View Cart</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Customizer Section - Only for Jackets -->
+          ${isJacketProduct ? `
+            <div class="customizer-section" id="customizerSection">
+              <div class="customizer-header">
+                <div>
+                  <h3><i class="fas fa-tshirt me-2"></i>Jacket Customizer</h3>
+                  <small class="muted">Design your perfect jacket • Size: <span id="customizerSizeDisplay">${selectedSize || 'M'}</span></small>
+                </div>
+                <button class="customizer-toggle" onclick="toggleCustomizer()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              
+              <div class="studio-shell">
+                <!-- Canvas -->
+                <section class="canvas-panel card">
+                  <div class="brand-row">
+                    <div class="brand">
+                      <div>
+                        <h3>${escapeHtml(product.title)}</h3>
+                        <div class="muted" style="font-size:12px">Craft your jacket • live outline preview</div>
+                      </div>
+                    </div>
+                    <div class="view-toggle">
+                      <button id="frontBtn" class="active">Front</button>
+                      <button id="backBtn">Back</button>
+                    </div>
+                  </div>
+                  <div class="canvas-wrap" id="canvasWrap">
+                    <svg id="jacketSVG" viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
+                      <g id="frontView" stroke="#f8f9fa" fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+                        <rect id="body" x="90" y="70" width="120" height="160" rx="10"/>
+                        <line id="zip" x1="150" y1="70" x2="150" y2="230"/>
+                        <path id="collar" d="M110 70 Q150 40 190 70"/>
+                        <path id="leftSleeve" d="M90 80 Q60 120 55 170 Q53 200 65 230"/>
+                        <path id="rightSleeve" d="M210 80 Q240 120 245 170 Q247 200 235 230"/>
+                        <line id="hem" x1="90" y1="230" x2="210" y2="230"/>
+                        <rect id="pocketLeft" x="105" y="170" width="30" height="20" rx="3" opacity="0"/>
+                        <rect id="pocketRight" x="165" y="170" width="30" height="20" rx="3" opacity="0"/>
+                      </g>
+                      <g id="backView" stroke="#f8f9fa" fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="display:none">
+                        <rect id="bodyB" x="90" y="70" width="120" height="160" rx="10"/>
+                        <path id="yoke" d="M90 105 Q150 85 210 105"/>
+                        <line id="centerBack" x1="150" y1="70" x2="150" y2="230" stroke-dasharray="4 4"/>
+                        <path id="leftSleeveB" d="M90 80 Q60 120 55 170 Q53 200 65 230"/>
+                        <path id="rightSleeveB" d="M210 80 Q240 120 245 170 Q247 200 235 230"/>
+                        <line id="hemB" x1="90" y1="230" x2="210" y2="230"/>
+                      </g>
+                    </svg>
+                  </div>
+                </section>
+
+                <!-- Simplified Controls -->
+                <aside class="controls-panel">
+                  <div class="card">
+                    <h4><i class="fas fa-ruler me-2"></i>Fit Customization</h4>
+                    <p class="small text-white mb-2">Fine-tune measurements for your selected size</p>
+                    <div class="mb-2">
+                      <label>Body length <span class="muted" id="lenVal">60 cm</span></label>
+                      <input id="length" type="range" min="52" max="70" value="60">
+                    </div>
+                    <div class="mb-2">
+                      <label>Chest width <span class="muted" id="widVal">52 cm</span></label>
+                      <input id="width" type="range" min="46" max="65" value="52">
+                    </div>
+                    <div class="mb-2">
+                      <label>Sleeve length <span class="muted" id="slvVal">62 cm</span></label>
+                      <input id="sleeve" type="range" min="54" max="70" value="62">
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <h4><i class="fas fa-cogs me-2"></i>Features</h4>
+                    <label>Pockets</label>
+                    <div class="chips" id="pockets">
+                      <button class="chip active" data-pocket="none">None</button>
+                      <button class="chip" data-pocket="left">Left</button>
+                      <button class="chip" data-pocket="right">Right</button>
+                      <button class="chip" data-pocket="both">Both</button>
+                    </div>
+                  </div>
+
+                  <div class="card">
+                    <button class="btn btn-dark w-100 py-2 rounded-pill fw-semibold mb-2" onclick="resetCustomizer()">
+                      <i class="fas fa-sync-alt me-2"></i>Reset to Default
+                    </button>
+                    <button id="checkoutBtn" class="btn btn-customizer-action" onclick="addCustomJacketToCart()">
+                      <i class="fas fa-shopping-cart me-2"></i>Add Custom Jacket to Cart (+₹200)
+                    </button>
+                    <div class="mt-2 small text-white">
+                      <i class="fas fa-info-circle me-1"></i>
+                      Customization fee: ₹200 • Total: ₹${(product.offerPrice || product.actualPrice) + 200}
+                    </div>
+                  </div>
+                </aside>
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- Size Chart Section - Only for Jackets -->
+          ${isJacketProduct ? `
+            <div class="size-chart-section">
+              <h5><i class="fas fa-info-circle me-2"></i>Jacket Sizing Guide</h5>
+              <div class="row mt-3">
+                <div class="col-md-6">
+                  <h6>How to Measure</h6>
+                  <ul class="list-unstyled small">
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i><strong>Chest:</strong> Measure around the fullest part, keeping tape horizontal</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i><strong>Length:</strong> From shoulder to desired hem length</li>
+                    <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i><strong>Sleeve:</strong> From shoulder seam to wrist</li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <h6>Sizing Tips</h6>
+                  <ul class="list-unstyled small">
+                    <li class="mb-2"><i class="fas fa-info-circle me-2"></i>Choose your normal jacket size for standard fit</li>
+                    <li class="mb-2"><i class="fas fa-info-circle me-2"></i>Jackets run true to size with room for layering</li>
+                    <li class="mb-2"><i class="fas fa-info-circle me-2"></i>Use customizer for perfect personalized fit</li>
+                    <li class="mb-2"><i class="fas fa-info-circle me-2"></i>Allow 1-2 cm tolerance in measurements</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="text-center mt-3">
+                <a href="#" class="btn btn-outline-light btn-sm" data-bs-toggle="modal" data-bs-target="#sizeChartModal">
+                  <i class="fas fa-table me-2"></i>View Full Size Chart
+                </a>
+              </div>
+            </div>
+          ` : `
+            <!-- General Info Section - For Non-Jackets -->
+            <div class="general-info-section">
+              <h5><i class="fas fa-info-circle me-2"></i>Product Information</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <ul class="list-unstyled small">
+                    <li class="mb-2"><i class="fas fa-shipping-fast text-success me-2"></i>Free shipping on orders over ₹999</li>
+                    <li class="mb-2"><i class="fas fa-shield-alt text-success me-2"></i>30-day return policy</li>
+                    <li class="mb-2"><i class="fas fa-headset text-success me-2"></i>Customer support available</li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <ul class="list-unstyled small">
+                    <li class="mb-2"><i class="fas fa-credit-card text-success me-2"></i>Multiple payment options</li>
+                    <li class="mb-2"><i class="fas fa-lock text-success me-2"></i>Secure checkout</li>
+                    <li class="mb-2"><i class="fas fa-gift text-success me-2"></i>Gift wrapping available</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          `}
+        `;
+
+        document.getElementById('productDetailContent').innerHTML = productHtml;
+        
+        // Update page title with dynamic product name
+        document.title = `${product.title} - Shop`;
+
+        // Initialize size selection only for jackets
+        if (isJacketProduct) {
+          initSizeSelection();
+          initCustomizer();
+        }
+
+        // Update cart count
+        updateCartCount();
+
+      } catch (err) {
+        console.error('❌ Error loading product details:', err);
+        document.getElementById('productDetailContent').innerHTML = `
+          <div class="error-container">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Failed to Load Product</h3>
+            <p>${err.message || 'There was an error loading the product details.'}</p>
+            <div class="mt-3">
+              <p class="small text-muted">Check the browser console for more details.</p>
+            </div>
+            <a href="/shop.html" class="back-button mt-3">
+              <i class="fas fa-arrow-left"></i> Back to Shop
+            </a>
+          </div>
+        `;
+      }
+    }
+
+    // Cart functionality
+    function updateCartCount() {
+      const cart = getCart();
+      const cartCountElement = document.getElementById('cartCount');
+      if (cartCountElement) {
+        const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+        cartCountElement.textContent = totalItems > 0 ? 
+          `View Cart (${totalItems} ${totalItems === 1 ? 'item' : 'items'})` : 
+          'View Cart';
+      }
+    }
+
+    // Regular add to cart function (first button)
+    window.addToCart = function(productId) {
+      const quantity = parseInt(document.getElementById('quantityInput')?.value) || 1;
+      const isJacket = window.product && window.product.category && window.product.category.toLowerCase().includes('jacket');
+      
+      // Size validation only for jackets
+      if (isJacket && !selectedSize) {
+        showToast('Please select a size before adding the jacket to cart.');
+        return;
+      }
+
+      const cart = getCart();
+      const productPrice = window.productPrice || 0;
+      
+      let cartItem = {
+        productId: productId,
+        title: window.product.title,
+        price: productPrice,
+        image: window.product.images && window.product.images.length > 0 ? window.product.images[0] : (window.product.imageUrl || '/placeholder.png'),
+        quantity: quantity,
+        timestamp: new Date().toISOString()
+      };
+
+      // Add size for jackets
+      if (isJacket && selectedSize) {
+        cartItem.size = selectedSize;
+      }
+
+      cartItem.totalPrice = productPrice;
+
+      // Check if item already exists in cart
+      const existingIndex = cart.findIndex(item => 
+        item.productId === productId && 
+        !item.isCustom && 
+        (!isJacket || item.size === selectedSize)
+      );
+      
+      if (existingIndex > -1) {
+        // Update quantity if item exists
+        cart[existingIndex].quantity += quantity;
+        cart[existingIndex].timestamp = new Date().toISOString();
+      } else {
+        // Add new item
+        cart.push(cartItem);
+      }
+
+      // Save cart and redirect to cart page
+      saveCart(cart);
+      window.location.href = '/cart.html';
+    };
+
+    // Custom jacket add to cart function (second button in customizer)
+    function addCustomJacketToCart() {
+      const productId = getUrlParameter('id');
+      const quantity = parseInt(document.getElementById('quantityInput')?.value) || 1;
+      
+      if (!selectedSize) {
+        showToast('Please select a size first.');
+        return;
+      }
+
+      const cart = getCart();
+      const productPrice = window.productPrice || 0;
+      
+      // Get the current values from the customizer ranges
+      const bodyLength = document.getElementById('length')?.value || 60;
+      const chestWidth = document.getElementById('width')?.value || 52;
+      const sleeveLength = document.getElementById('sleeve')?.value || 62;
+      const pockets = document.querySelector('#pockets .chip.active')?.dataset.pocket || 'none';
+      
+      // Convert pocket value to readable text
+      let pocketText = '';
+      switch(pockets) {
+        case 'none':
+          pocketText = 'No Pockets';
+          break;
+        case 'left':
+          pocketText = 'Left Pocket Only';
+          break;
+        case 'right':
+          pocketText = 'Right Pocket Only';
+          break;
+        case 'both':
+          pocketText = 'Both Pockets';
+          break;
+        default:
+          pocketText = 'No Pockets';
+      }
+      
+      const customData = getCustomJacketData();
+      
+      // Create clean custom title without measurements
+      const customTitle = `${window.product.title} (Custom)`;
+      
+      let cartItem = {
+        productId: productId,
+        title: customTitle,
+        price: productPrice,
+        image: window.product.images && window.product.images.length > 0 ? window.product.images[0] : (window.product.imageUrl || '/placeholder.png'),
+        quantity: quantity,
+        timestamp: new Date().toISOString(),
+        size: `Body Length: ${bodyLength}cm, Chest Width: ${chestWidth}cm, Sleeve Length: ${sleeveLength}cm, ${pocketText}`,
+        customization: customData,
+        customizationFee: 200,
+        totalPrice: productPrice + 200,
+        isCustom: true,
+        customId: `${productId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+      };
+
+      // Always add custom items as new items (they're unique)
+      cart.push(cartItem);
+
+      // Save cart and redirect to cart page
+      saveCart(cart);
+      window.location.href = '/cart.html';
+    }
+
+    // Customizer Functions - Only for Jackets
+    let customizerInitialized = false;
+
+    function initCustomizer() {
+      if (customizerInitialized) return;
+
+      /* Elements */
+      const lenRange = document.getElementById('length');
+      const widRange = document.getElementById('width');
+      const slvRange = document.getElementById('sleeve');
+      const lenVal = document.getElementById('lenVal');
+      const widVal = document.getElementById('widVal');
+      const slvVal = document.getElementById('slvVal');
+      const pocketsWrap = document.getElementById('pockets');
+      const customizerSizeDisplay = document.getElementById('customizerSizeDisplay');
+
+      const frontBtn = document.getElementById('frontBtn');
+      const backBtn = document.getElementById('backBtn');
+      const frontView = document.getElementById('frontView');
+      const backView = document.getElementById('backView');
+
+      const body = document.getElementById('body');
+      const zip = document.getElementById('zip');
+      const collar = document.getElementById('collar');
+      const leftSleeve = document.getElementById('leftSleeve');
+      const rightSleeve = document.getElementById('rightSleeve');
+      const hem = document.getElementById('hem');
+      const pocketLeft = document.getElementById('pocketLeft');
+      const pocketRight = document.getElementById('pocketRight');
+
+      const bodyB = document.getElementById('bodyB');
+      const yoke = document.getElementById('yoke');
+      const leftSleeveB = document.getElementById('leftSleeveB');
+      const rightSleeveB = document.getElementById('rightSleeveB');
+      const hemB = document.getElementById('hemB');
+
+      function cmToPxL(cm){ return 160 + (cm - 60) * 2.2; }
+      function cmToPxW(cm){ return 120 + (cm - 52) * 2.1; }
+      function sleeveCurve(len){
+        const delta = (len - 62) * 0.9;
+        return { q1: 120 + delta, q2: 170 + delta*0.6, endY: 230 + Math.min(10, Math.max(-10, delta)) };
+      }
+
+      function syncLabels(){
+        lenVal.textContent = lenRange.value + ' cm';
+        widVal.textContent = widRange.value + ' cm';
+        slvVal.textContent = slvRange.value + ' cm';
+        
+        // Update customizer size display when size changes
+        if (customizerSizeDisplay && selectedSize) {
+          customizerSizeDisplay.textContent = selectedSize;
+        }
+      }
+
+      function updatePockets(mode){
+        const bw = parseFloat(body.getAttribute('width'));
+        const bx = parseFloat(body.getAttribute('x'));
+        const by = parseFloat(body.getAttribute('y'));
+        const bh = parseFloat(body.getAttribute('height'));
+        const pocketY = by + Math.max(120, bh - 60);
+        const pW = Math.max(24, Math.min(36, bw * 0.25));
+        const pH = 20, round = 3;
+
+        pocketLeft.setAttribute('x', bx + bw * 0.12);
+        pocketLeft.setAttribute('y', pocketY);
+        pocketLeft.setAttribute('width', pW);
+        pocketLeft.setAttribute('height', pH);
+        pocketLeft.setAttribute('rx', round);
+
+        pocketRight.setAttribute('x', bx + bw - (bw * 0.12) - pW);
+        pocketRight.setAttribute('y', pocketY);
+        pocketRight.setAttribute('width', pW);
+        pocketRight.setAttribute('height', pH);
+        pocketRight.setAttribute('rx', round);
+
+        if(mode === 'none'){ pocketLeft.setAttribute('opacity',0); pocketRight.setAttribute('opacity',0); }
+        if(mode === 'left'){ pocketLeft.setAttribute('opacity',1); pocketRight.setAttribute('opacity',0); }
+        if(mode === 'right'){ pocketLeft.setAttribute('opacity',0); pocketRight.setAttribute('opacity',1); }
+        if(mode === 'both'){ pocketLeft.setAttribute('opacity',1); pocketRight.setAttribute('opacity',1); }
+      }
+
+      function updateSVG(){
+        const l = parseInt(lenRange.value);
+        const w = parseInt(widRange.value);
+        const s = parseInt(slvRange.value);
+
+        body.setAttribute('y', 70);
+        body.setAttribute('x', 150 - cmToPxW(w)/2);
+        body.setAttribute('width', cmToPxW(w));
+        body.setAttribute('height', cmToPxL(l));
+
+        zip.setAttribute('x1', 150);
+        zip.setAttribute('x2', 150);
+        zip.setAttribute('y2', 70 + cmToPxL(l));
+
+        collar.setAttribute('d', `M${150-cmToPxW(w)/2} 70 Q150 40 ${150+cmToPxW(w)/2} 70`);
+
+        const sl = sleeveCurve(s);
+        leftSleeve.setAttribute('d', `M${150-cmToPxW(w)/2} 80 Q60 ${sl.q1} 55 ${sl.q2} Q53 ${sl.endY} 65 ${sl.endY}`);
+        rightSleeve.setAttribute('d', `M${150+cmToPxW(w)/2} 80 Q240 ${sl.q1} 245 ${sl.q2} Q247 ${sl.endY} 235 ${sl.endY}`);
+        hem.setAttribute('x1', 150-cmToPxW(w)/2);
+        hem.setAttribute('x2', 150+cmToPxW(w)/2);
+        hem.setAttribute('y1', 70+cmToPxL(l));
+        hem.setAttribute('y2', 70+cmToPxL(l));
+
+        updatePockets(document.querySelector('.chips .active').dataset.pocket);
+      }
+
+      // Event Listeners
+      [lenRange, widRange, slvRange].forEach(el=>{
+        el.addEventListener('input',()=>{ syncLabels(); updateSVG(); });
+      });
+
+      pocketsWrap.querySelectorAll('.chip').forEach(chip=>{
+        chip.addEventListener('click',()=>{
+          pocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+          chip.classList.add('active');
+          updateSVG();
+        });
+      });
+
+      frontBtn.addEventListener('click',()=>{
+        frontView.style.display='block';
+        backView.style.display='none';
+        frontBtn.classList.add('active');
+        backBtn.classList.remove('active');
+      });
+
+      backBtn.addEventListener('click',()=>{
+        frontView.style.display='none';
+        backView.style.display='block';
+        frontBtn.classList.remove('active');
+        backBtn.classList.add('active');
+      });
+
+      window.resetCustomizer = function() {
+        lenRange.value = 60;
+        widRange.value = 52;
+        slvRange.value = 62;
+        pocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        pocketsWrap.querySelector('[data-pocket="none"]').classList.add('active');
+        syncLabels();
+        updateSVG();
+      };
+
+      // Listen for size changes to update customizer
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('size-chip')) {
+          if (customizerSizeDisplay) {
+            customizerSizeDisplay.textContent = selectedSize || 'M';
+          }
+        }
+      });
+
+      /* Init */
+      syncLabels();
+      updateSVG();
+      customizerInitialized = true;
+    }
+
+    // Customizer Toggle
+    function toggleCustomizer() {
+      const customizerSection = document.getElementById('customizerSection');
+      if (customizerSection) {
+        if (customizerSection.style.display === 'none' || !customizerSection.style.display) {
+          customizerSection.style.display = 'block';
+          if (!customizerInitialized) {
+            initCustomizer();
+          }
+          // Update customizer size display
+          const customizerSizeDisplay = document.getElementById('customizerSizeDisplay');
+          if (customizerSizeDisplay && selectedSize) {
+            customizerSizeDisplay.textContent = selectedSize;
+          }
+          AOS.refresh();
+        } else {
+          customizerSection.style.display = 'none';
+        }
+      }
+    }
+
+    // Image thumbnail functionality
+    function changeMainImage(src, alt) {
+      const mainImage = document.getElementById('mainProductImage');
+      if (mainImage) {
+        mainImage.src = src;
+        mainImage.alt = alt;
+        
+        // Update thumbnails
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+          thumb.classList.remove('active');
+        });
+        event.target.classList.add('active');
+      }
+    }
+
+    function getCustomJacketData() {
+      return {
+        size: selectedSize || 'M',
+        length: document.getElementById('length')?.value || 60,
+        width: document.getElementById('width')?.value || 52,
+        sleeve: document.getElementById('sleeve')?.value || 62,
+        pockets: document.querySelector('#pockets .chip.active')?.dataset.pocket || 'none',
+        view: document.getElementById('frontBtn').classList.contains('active') ? 'front' : 'back',
+        additionalCost: 200 // Customization fee
+      };
+    }
+
+    // Initialize the page
+    document.addEventListener('DOMContentLoaded', function() {
+      loadProductDetail();
+      
+      // Initialize quantity controls
+      document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('quantity-btn')) {
+          e.preventDefault();
+          const input = document.getElementById('quantityInput');
+          if (input) {
+            const currentVal = parseInt(input.value) || 1;
+            const change = e.target.textContent === '+' ? 1 : -1;
+            const newVal = Math.max(1, Math.min(99, currentVal + change));
+            input.value = newVal;
+            currentQuantity = newVal;
+          }
+        }
+      });
+    });
+
+    // Global variables
+    window.productPrice = 0;
+    window.product = null;
+  
+  </script>
+</body>
+</html>

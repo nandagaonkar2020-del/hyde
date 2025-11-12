@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Shop - Products</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+ 
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <link rel="stylesheet" href="stylee.css">
+  
+   <style>
+    /* ===== GLOBAL ===== */
+body {
+  background-color: #0b0b0b;
+  color: #e0e0e0;
+  font-family: 'Poppins', sans-serif;
+  min-height: 100vh;
+}
+
+/* ===== CATEGORY NAV ===== */
+.nav-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  border: none;
+  background: #121212;
+  border-radius: 12px;
+  padding: 6px;
+  margin-top: 20px;
+  margin-bottom: 2rem;
+}
+
+.nav-tabs .nav-link {
+  color: #a0a0a0;
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  margin: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.nav-tabs .nav-link.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  font-weight: 600;
+}
+
+/* ===== PRODUCT CARD ===== */
+.product-card {
+  background: #141414;
+  border-radius: 14px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(255, 255, 255, 0.07);
+}
+
+.product-card img {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover img {
+  transform: scale(1.02);
+}
+
+.product-card h6 {
+  font-weight: 600;
+  color: #f2f2f2;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.product-card p {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 12px;
+  min-height: 38px;
+}
+
+.price-container {
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+.price-container del {
+  color: #666;
+  margin-right: 6px;
+}
+
+.current-price {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* ===== BUTTON ===== */
+.btn-container {
+  margin-top: 8px;
+}
+
+.btn-cart {
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 30px;
+  font-weight: 500;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.btn-cart:hover {
+  background: #222;
+  border-color: #555;
+}
+
+/* ===== EMPTY STATE ===== */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: #777;
+}
+
+.empty-state i {
+  font-size: 3.5rem;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+/* ===== ANIMATIONS ===== */
+.tab-pane {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== RESPONSIVE GRID ===== */
+
+/* Small screens: 1 card per row (spacious) */
+@media (max-width: 575px) {
+  .col-md-4.col-sm-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+/* Medium: 2 per row */
+@media (min-width: 576px) and (max-width: 991px) {
+  .col-md-4.col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+/* Desktop: 4 per row */
+@media (min-width: 992px) {
+  .col-md-4.col-sm-6 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+ 
+
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid d-flex align-items-center justify-content-between px-3">
+
+    <!-- Left: Nav links (collapsible) -->
+    <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <i class="bi bi-list text-white fs-3"></i>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-start order-lg-1 order-3" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+        
+        <li class="nav-item"><a class="nav-link" href="./customization.html">Customize</a></li>
+      </ul>
+    </div>
+
+    <!-- Center: Logo -->
+    <!-- <a class="navbar-brand mx-auto order-2" href="#">HYDE</a> -->
+    <a class="navbar-brand mx-auto order-2" href="#"><img src="./img/logo.png" alt="" class="img-fluid " style="height: 80px;"></a>
+
+    <!-- Right: Icons -->
+    <div class="icons d-flex align-items-center order-lg-3 order-4">
+      <a href="cart.html" class="text-white me-3 position-relative">
+  <i class="bi bi-cart fs-5"></i>
+  <span id="cartBadge" 
+        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+        style="display:none; width:10px; height:10px;"></span>
+</a>
+
+      <!-- <a href="#" class="text-white"><i class="bi bi-person-circle fs-5"></i></a> -->
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <main class="container">
+    <div id="shopContent">
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+      </div>
+    </div>
+  </main>
+
+
+  
+ <!-- Footer -->
+  <footer style="margin-top: 100px;">
+    <div>
+      <p>© 2025 HYDE. All Rights Reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Terms & Conditions</a> |
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/common.js"></script>
+  <script src="./cart-badge.js"></script>
+  <script>
+    // Helpers
+    function generateSlug(title) {
+      return title.toLowerCase().replace(/[^\w ]+/g, '').replace(/ +/g, '-');
+    }
+
+    function navigateToProductDetail(productId, productTitle) {
+      // Use encodeURIComponent for safety
+      window.location.href = '/product-detail.html?id=' + encodeURIComponent(productId) +
+                              '&title=' + encodeURIComponent(productTitle || '');
+    }
+
+    // Add to Cart functionality (consistent cart item shape)
+    function addToCart(productId, event) {
+      if (event) event.stopPropagation();
+
+      const allProducts = window.loadedProducts || [];
+      const product = allProducts.find(p => (p._id === productId) || (p.id === productId));
+
+      if (!product) {
+        alert('Product not found, please refresh and try again.');
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      const existing = cart.find(item => item.productId === productId);
+      if (existing) {
+        existing.quantity = (existing.quantity || 0) + 1;
+      } else {
+        cart.push({
+          productId: productId,
+          title: product.title,
+          price: product.offerPrice || product.actualPrice,
+          image: (product.images && product.images.length > 0) ? product.images[0] : (product.imageUrl || '/placeholder.png'),
+          quantity: 1
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      // go to cart page
+      window.location.href = '/cart.html';
+    }
+
+    // Load shop products and render tabs
+    async function loadShopProducts() {
+      try {
+        const products = await publicApiGet('/products/public');
+        window.loadedProducts = Array.isArray(products) ? products : [];
+
+        if (!products || !products.length) {
+          document.getElementById('shopContent').innerHTML = `
+            <div class="empty-state">
+              <i class="fas fa-box-open"></i>
+              <h3>No Products Available</h3>
+              <p>Check back later for new arrivals.</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Group by category (stable order as found)
+        const grouped = {};
+        products.forEach(p => {
+          const cat = p.category || 'Uncategorized';
+          if (!grouped[cat]) grouped[cat] = [];
+          grouped[cat].push(p);
+        });
+
+        const categories = Object.keys(grouped);
+        let tabsHtml = `<ul class="nav nav-tabs" id="categoryTabs" role="tablist">`;
+        categories.forEach((category, index) => {
+          const activeClass = index === 0 ? 'active' : '';
+          const selectedAttr = index === 0 ? 'true' : 'false';
+          const categorySlug = category.replace(/\s+/g, '-').toLowerCase();
+          tabsHtml += `
+            <li class="nav-item" role="presentation">
+              <button class="nav-link ${activeClass}" id="${categorySlug}-tab" data-bs-toggle="tab"
+                data-bs-target="#${categorySlug}" type="button" role="tab"
+                aria-controls="${categorySlug}" aria-selected="${selectedAttr}">
+                ${category}
+              </button>
+            </li>`;
+        });
+        tabsHtml += `</ul>`;
+
+        let contentHtml = `<div class="tab-content" id="categoryTabsContent">`;
+        categories.forEach((category, index) => {
+          const activeClass = index === 0 ? 'show active' : '';
+          const categorySlug = category.replace(/\s+/g, '-').toLowerCase();
+          contentHtml += `<div class="tab-pane fade ${activeClass}" id="${categorySlug}" role="tabpanel"
+            aria-labelledby="${categorySlug}-tab" tabindex="0"><div class="row g-4">`;
+
+          grouped[category].forEach(p => {
+            const productId = p._id || p.id;
+            const productTitle = p.title || 'Untitled Product';
+            const productDescription = p.description || '';
+            const productImage = (p.images && p.images.length > 0) ? p.images[0] : (p.imageUrl || '/placeholder.png');
+            const actualPrice = p.actualPrice ?? 0;
+            const offerPrice = p.offerPrice ?? p.actualPrice ?? 0;
+
+            // escape single quotes in title for inline onclick (defensive)
+            const safeTitle = (productTitle + '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+            contentHtml += `
+              <div class="col-md-4 col-sm-6">
+                <div class="product-card" onclick="navigateToProductDetail('${encodeURIComponent(productId)}', '${safeTitle}')" style="cursor: pointer;">
+                  <img src="${productImage}" alt="${safeTitle}" onerror="this.src='/placeholder.png'">
+                  <h6 style="text-transform:uppercase;">${productTitle}</h6>
+                  <p class="text-white">${(productDescription || '').substring(0, 100)}${(productDescription||'').length > 100 ? '...' : ''}</p>
+                  <div class="price-container">
+                    ${actualPrice && actualPrice > offerPrice ? `<del class="text-white me-2">₹${actualPrice}</del>` : ''}
+                    <span class="current-price">₹${offerPrice}</span>
+                  </div>
+                  <div class="btn-container">
+                    <button class="btn btn-cart btn-sm" onclick="addToCart('${encodeURIComponent(productId)}', event)">
+                      <i class="fas fa-shopping-cart me-1"></i> Add to Cart
+                    </button>
+                  </div>
+                </div>
+              </div>`;
+          });
+
+          contentHtml += `</div></div>`;
+        });
+
+        contentHtml += `</div>`;
+        document.getElementById('shopContent').innerHTML = tabsHtml + contentHtml;
+
+      } catch (err) {
+        console.error('Error loading products:', err);
+        document.getElementById('shopContent').innerHTML = `
+          <div class="alert alert-danger text-center">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            ${err.message || 'Failed to load products. Please check the server.'}
+          </div>`;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadShopProducts);
+  </script>
+</body>
+</html>

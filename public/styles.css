@@ -1,0 +1,5 @@
+body {
+  background: #f7f9fc;
+}
+.min-vh-100 { min-height: 100vh; }
+.card { border-radius: .6rem; }

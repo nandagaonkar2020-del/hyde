@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!-- <meta name="robots" content="noindex, nofollow"> -->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Products</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="/styles.css" rel="stylesheet" />
+  <style>
+    .image-preview {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .img-wrapper {
+      position: relative;
+    }
+    .img-wrapper img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      cursor: grab;
+      transition: transform 0.15s ease;
+    }
+    .img-wrapper .delete-btn {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: #ff3b30;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-preview img.dragging {
+      opacity: 0.4;
+      transform: scale(0.9);
+    }
+    #dropArea,
+    #edit_dropArea {
+      cursor: pointer;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      background-color: #fafafa;
+      transition: all 0.2s ease;
+    }
+    #dropArea.dragover,
+    #edit_dropArea.dragover {
+      background-color: #e7f1ff;
+      border-color: #007bff;
+    }
+    .table td, .table th {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <main class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>Products</h3>
+      <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createProductModal">
+        Create Product
+      </button>
+    </div>
+
+    <div id="prodAlert" class="alert d-none"></div>
+
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="productsTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create Product Modal -->
+  <div class="modal fade" id="createProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="createProductForm" class="modal-content" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input id="p_title" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select id="p_category" class="form-select" required>
+              <option value="">Select Category</option>
+              <option value="Jackets">Jackets</option>
+              <option value="Wallets">Wallets</option>
+              <option value="Belts">Belts</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Actual Price</label>
+              <input id="p_actual_price" type="number" step="0.01" class="form-control" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Offer Price</label>
+              <input id="p_price" type="number" step="0.01" class="form-control" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+  <label class="form-label">Description</label>
+  <textarea id="p_desc" class="form-control" rows="3" maxlength="550"></textarea>
+  <div class="text-end small text-muted mt-1" id="p_desc_counter">0 / 550</div>
+</div>
+
+
+          <!-- Create Image Upload -->
+          <div class="mb-3">
+            <label class="form-label">Product Images</label>
+            <div id="dropArea">
+              <p class="text-muted mb-2">Drag & drop up to 4 images or click to select</p>
+              <div id="dragPreview" class="image-preview justify-content-center"></div>
+            </div>
+            <small class="text-muted">You can reorder or delete images</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary w-100">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Product Modal -->
+  <div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="editProductForm" class="modal-content" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editProductId" />
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input id="editTitle" class="form-control" required />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <select id="editCategory" class="form-select" required>
+              <option value="">Select Category</option>
+              <option value="Jackets">Jackets</option>
+              <option value="Wallets">Wallets</option>
+              <option value="Belts">Belts</option>
+            </select>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Actual Price</label>
+              <input id="editActualPrice" type="number" step="0.01" class="form-control" required />
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Offer Price</label>
+              <input id="editOfferPrice" type="number" step="0.01" class="form-control" />
+            </div>
+          </div>
+
+          <div class="mb-3">
+  <label class="form-label">Description</label>
+  <textarea id="editDesc" class="form-control" rows="3" maxlength="550"></textarea>
+  <div class="text-end small text-muted mt-1" id="edit_desc_counter">0 / 550</div>
+</div>
+
+
+          <!-- Edit Image Upload -->
+          <div class="mb-3">
+            <label class="form-label">Product Images</label>
+            <div id="edit_dropArea">
+              <p class="text-muted mb-2">Drag & drop up to 4 images or click to select</p>
+              <div id="edit_dragPreview" class="image-preview justify-content-center"></div>
+            </div>
+            <small class="text-muted">You can reorder images</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/common.js"></script>
+
+  <script>
+  ensureAuth();
+  insertNavbar();
+
+  const MAX_IMAGES = 4;
+  const VALID_TYPES = ["image/jpeg","image/png","image/webp"];
+  const MAX_SIZE = 3 * 1024 * 1024;
+  const prodAlert=document.getElementById("prodAlert");
+
+  function showProdAlert(type,msg){
+    prodAlert.className=`alert alert-${type}`;
+    prodAlert.classList.remove("d-none");
+    prodAlert.textContent=msg;
+    setTimeout(()=>prodAlert.classList.add("d-none"),4500);
+  }
+
+  function escapeHtml(text){if(!text)return '';return text.replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+
+  // ---------- CREATE PRODUCT ----------
+  let selectedFiles=[];
+  const dropArea=document.getElementById("dropArea");
+  const dragPreview=document.getElementById("dragPreview");
+
+  dropArea.addEventListener("click",()=>{const i=document.createElement("input");i.type="file";i.accept="image/*";i.multiple=true;i.onchange=(e)=>handleFiles(e.target.files);i.click();});
+  dropArea.addEventListener("dragover",(e)=>{e.preventDefault();dropArea.classList.add("dragover");});
+  dropArea.addEventListener("dragleave",()=>dropArea.classList.remove("dragover"));
+  dropArea.addEventListener("drop",(e)=>{e.preventDefault();dropArea.classList.remove("dragover");handleFiles(e.dataTransfer.files);});
+
+  function handleFiles(files){
+    for(const f of files){
+      if(!VALID_TYPES.includes(f.type)) return showProdAlert("danger","Invalid file type");
+      if(f.size>MAX_SIZE) return showProdAlert("danger","File too large");
+    }
+    selectedFiles=[...selectedFiles,...files].slice(0,MAX_IMAGES);
+    renderDraggablePreviews();
+  }
+
+  function renderDraggablePreviews(){
+    dragPreview.innerHTML="";
+    selectedFiles.forEach((f,i)=>{
+      const wrap=document.createElement("div");
+      wrap.className="img-wrapper";
+      const img=document.createElement("img");
+      img.src=URL.createObjectURL(f);
+      img.draggable=true;img.dataset.index=i;
+      img.addEventListener("dragstart",dragStart);
+      img.addEventListener("dragover",dragOver);
+      img.addEventListener("drop",dropImage);
+      const del=document.createElement("button");
+      del.className="delete-btn";del.innerHTML="×";
+      del.onclick=(e)=>{e.stopPropagation();selectedFiles.splice(i,1);renderDraggablePreviews();};
+      wrap.appendChild(img);wrap.appendChild(del);
+      dragPreview.appendChild(wrap);
+    });
+  }
+
+  let draggedIndex=null;
+  function dragStart(e){draggedIndex=e.target.dataset.index;}
+  function dragOver(e){e.preventDefault();}
+  function dropImage(e){e.preventDefault();const t=e.target.dataset.index;const dragged=selectedFiles.splice(draggedIndex,1)[0];selectedFiles.splice(t,0,dragged);renderDraggablePreviews();}
+
+  // ---------- EDIT PRODUCT ----------
+  let editFiles=[];
+  const edit_dropArea=document.getElementById("edit_dropArea");
+  const edit_dragPreview=document.getElementById("edit_dragPreview");
+
+  edit_dropArea.addEventListener("click",()=>{const i=document.createElement("input");i.type="file";i.accept="image/*";i.multiple=true;i.onchange=(e)=>handleEditFiles(e.target.files);i.click();});
+  edit_dropArea.addEventListener("dragover",(e)=>{e.preventDefault();edit_dropArea.classList.add("dragover");});
+  edit_dropArea.addEventListener("dragleave",()=>edit_dropArea.classList.remove("dragover"));
+  edit_dropArea.addEventListener("drop",(e)=>{e.preventDefault();edit_dropArea.classList.remove("dragover");handleEditFiles(e.dataTransfer.files);});
+
+  function handleEditFiles(files){
+    for(const f of files){
+      if(!VALID_TYPES.includes(f.type)) return showProdAlert("danger","Invalid file type");
+      if(f.size>MAX_SIZE) return showProdAlert("danger","File too large");
+    }
+    editFiles=[...editFiles,...files].slice(0,MAX_IMAGES);
+    renderEditPreviews();
+  }
+
+  function renderEditPreviews(){
+    edit_dragPreview.innerHTML="";
+    editFiles.forEach((f,i)=>{
+      const wrap=document.createElement("div");
+      wrap.className="img-wrapper";
+      const img=document.createElement("img");
+      img.src=f instanceof File ? URL.createObjectURL(f) : f;
+      img.draggable=true;img.dataset.index=i;
+      img.addEventListener("dragstart",editDragStart);
+      img.addEventListener("dragover",editDragOver);
+      img.addEventListener("drop",editDropImage);
+      wrap.appendChild(img);
+      edit_dragPreview.appendChild(wrap);
+    });
+  }
+
+  let editDraggedIndex=null;
+  function editDragStart(e){editDraggedIndex=e.target.dataset.index;}
+  function editDragOver(e){e.preventDefault();}
+  function editDropImage(e){e.preventDefault();const t=e.target.dataset.index;const dragged=editFiles.splice(editDraggedIndex,1)[0];editFiles.splice(t,0,dragged);renderEditPreviews();}
+
+  // ---------- CRUD ----------
+  async function loadProducts(){const tbody=document.getElementById("productsTbody");
+    try{
+      const res=await apiGet("/products");
+      if(!res.length){tbody.innerHTML="<tr><td colspan='4' class='text-center'>No products found</td></tr>";return;}
+      tbody.innerHTML=res.map(p=>`
+        <tr>
+          <td>${escapeHtml(p.title)}</td>
+          <td>${escapeHtml(p.category)}</td>
+          <td><del>₹${p.actualPrice}</del> <strong>₹${p.offerPrice}</strong></td>
+          <td>
+            <button class="btn btn-sm btn-warning me-1" onclick="editProduct('${p._id}')">Edit</button>
+            <button class="btn btn-sm btn-danger" onclick="deleteProduct('${p._id}')">Delete</button>
+          </td>
+        </tr>
+      `).join('');
+    }catch{showProdAlert("danger","Failed to load products");}
+  }
+
+  document.getElementById("createProductForm").addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    if(!selectedFiles.length)return showProdAlert("danger","Please upload at least one image");
+    const fd=new FormData();
+    selectedFiles.forEach(f=>fd.append("images",f));
+    fd.append("title",p_title.value.trim());
+    fd.append("actualPrice",p_actual_price.value);
+    fd.append("offerPrice",p_price.value);
+    fd.append("description",p_desc.value.trim());
+    fd.append("category",p_category.value);
+    try{
+      await apiPost("/products",fd);
+      bootstrap.Modal.getInstance(createProductModal).hide();
+      e.target.reset();selectedFiles=[];renderDraggablePreviews();
+      showProdAlert("success","Product created");loadProducts();
+    }catch{showProdAlert("danger","Create failed");}
+  });
+
+  window.editProduct=async(id)=>{
+    try{
+      const p=await apiGet(`/products/${id}`);
+      editProductId.value=p._id;
+      editTitle.value=p.title||"";
+      editCategory.value=p.category||"";
+      editActualPrice.value=p.actualPrice||0;
+      editOfferPrice.value=p.offerPrice||0;
+      editDesc.value=p.description||"";
+      editFiles=p.images||[];
+      renderEditPreviews();
+      new bootstrap.Modal(editProductModal).show();
+    }catch{showProdAlert("danger","Failed to load product");}
+  };
+
+  document.getElementById("editProductForm").addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    const id=editProductId.value;
+    const fd=new FormData();
+    editFiles.forEach(f=>{
+      if(f instanceof File)fd.append("images",f);
+      else fd.append("existingImages[]",f);
+    });
+    fd.append("title",editTitle.value.trim());
+    fd.append("actualPrice",editActualPrice.value);
+    fd.append("offerPrice",editOfferPrice.value);
+    fd.append("description",editDesc.value.trim());
+    fd.append("category",editCategory.value);
+    try{
+      await apiPut(`/products/${id}`,fd);
+      bootstrap.Modal.getInstance(editProductModal).hide();
+      showProdAlert("success","Product updated");
+      loadProducts();
+    }catch{showProdAlert("danger","Update failed");}
+  });
+
+  window.deleteProduct=async(id)=>{
+    if(!confirm("Delete this product?"))return;
+    try{await apiDelete(`/products/${id}`);showProdAlert("success","Product deleted");loadProducts();}
+    catch{showProdAlert("danger","Delete failed");}
+  };
+
+  loadProducts();
+  // ---------- CHARACTER COUNTERS ----------
+const pDesc = document.getElementById("p_desc");
+const pCounter = document.getElementById("p_desc_counter");
+const editDesc = document.getElementById("editDesc");
+const editCounter = document.getElementById("edit_desc_counter");
+
+function updateCounter(textarea, counter, limit = 550) {
+  const len = textarea.value.length;
+  counter.textContent = `${len} / ${limit}`;
+  counter.style.color = len >= limit ? "red" : "#6c757d"; // red when near limit
+}
+
+pDesc.addEventListener("input", () => updateCounter(pDesc, pCounter));
+editDesc.addEventListener("input", () => updateCounter(editDesc, editCounter));
+
+// Reset counter on modal open
+document.getElementById("createProductModal").addEventListener("shown.bs.modal", () => {
+  updateCounter(pDesc, pCounter);
+});
+
+document.getElementById("editProductModal").addEventListener("shown.bs.modal", () => {
+  updateCounter(editDesc, editCounter);
+});
+
+  </script>
+</body>
+</html>

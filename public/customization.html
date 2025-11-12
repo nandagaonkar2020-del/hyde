@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HYDE | Premium Leather</title>
+
+  <!-- Bootstrap + Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <link rel="stylesheet" href="stylee.css">
+
+  <style>
+    body {
+      background-color: #121212;
+      color: #f8f9fa;
+      /* font-family: 'Montserrat', sans-serif; */
+      /* padding-top: 40px; */
+    }
+
+    .studio-shell {
+      max-width: 1100px;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 20px;
+      padding: 1rem;
+      margin: 30px auto 50px;
+    }
+
+    .canvas-panel {
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .brand-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f8f9fa;
+    }
+
+    .muted {
+      color: #adb5bd !important;
+      font-size: 13px;
+    }
+
+    .view-toggle button {
+      border: 0;
+      padding: 6px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      color: #adb5bd;
+      background: transparent;
+    }
+
+    .view-toggle button.active {
+      background: #343a40;
+      color: #f8f9fa;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    }
+
+    .canvas-wrap {
+      padding: 18px;
+      border-radius: 12px;
+      background-color: #212529;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    svg {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      display: block;
+      stroke: #f8f9fa;
+    }
+
+    .controls-panel .card {
+      background-color: #1e1e1e;
+      border-radius: 12px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,0.05);
+      color: #f8f9fa;
+    }
+
+    select, input[type="range"] {
+      background: #2c2c2c;
+      color: #f8f9fa;
+      border: 1px solid #495057;
+      border-radius: 10px;
+      font-weight: 600;
+    }
+
+    .chips .chip {
+      background: #2c2c2c;
+      color: #adb5bd;
+      border: 1px solid #495057;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .chips .chip.active {
+      background: #495057;
+      color: #f8f9fa;
+      border-color: transparent;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    @media (max-width: 980px){
+      .studio-shell { grid-template-columns: 1fr; gap: 12px; }
+      .canvas-wrap { order: 2; }
+    }
+    
+    /* Toast notification */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1055;
+    }
+
+    .toast {
+      background: #121212;
+      border: 1px solid #333;
+      border-radius: 10px;
+      color: #fff;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+    }
+
+    .toast-header {
+      background: #1e1e1e;
+      border-bottom: 1px solid #333;
+      color: #fff;
+    }
+
+    .btn-close-white {
+      filter: invert(1) grayscale(100%) brightness(200%);
+    }
+  </style>
+</head>
+
+<body>
+
+  
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+  <div class="container-fluid d-flex align-items-center justify-content-between px-3">
+
+    <!-- Left: Nav links (collapsible) -->
+    <button class="navbar-toggler order-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <i class="bi bi-list text-white fs-3"></i>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-start order-lg-1 order-3" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="shop.html">Shop</a></li>
+        
+        <li class="nav-item"><a class="nav-link" href="./customization.html">Customize</a></li>
+      </ul>
+    </div>
+
+    <!-- Center: Logo -->
+    <!-- <a class="navbar-brand mx-auto order-2" href="#">HYDE</a> -->
+    <a class="navbar-brand mx-auto order-2" href="#"><img src="./img/logo.png" alt="" class="img-fluid " style="height: 80px;"></a>
+
+    <!-- Right: Icons -->
+    <div class="icons d-flex align-items-center order-lg-3 order-4">
+      <a href="cart.html" class="text-white me-3 position-relative">
+  <i class="bi bi-cart fs-5"></i>
+  <span id="cartBadge" 
+        class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+        style="display:none; width:10px; height:10px;"></span>
+</a>
+
+      <!-- <a href="#" class="text-white"><i class="bi bi-person-circle fs-5"></i></a> -->
+    </div>
+
+  </div>
+</nav>
+
+
+
+  <main class="studio-shell">
+    <!-- Left side: Canvas -->
+    <section class="canvas-panel card">
+      <div class="brand-row">
+        <div class="brand">
+          <h3>HYDE Studio</h3>
+          <div class="muted" style="font-size:12px">Craft your jacket • live outline preview</div>
+        </div>
+        <div class="view-toggle">
+          <button id="frontBtn" class="active">Front</button>
+          <button id="backBtn">Back</button>
+        </div>
+      </div>
+
+      <div class="canvas-wrap" id="canvasWrap">
+        <svg id="jacketSVG" viewBox="0 0 300 380" xmlns="http://www.w3.org/2000/svg">
+          <!-- FRONT VIEW -->
+          <g id="frontView" stroke="#f8f9fa" fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+            <rect id="body" x="90" y="70" width="120" height="160" rx="10"/>
+            <line id="zip" x1="150" y1="70" x2="150" y2="230"/>
+            <path id="collar" d="M110 70 Q150 40 190 70"/>
+            <path id="leftSleeve" d="M90 80 Q60 120 55 170 Q53 200 65 230"/>
+            <path id="rightSleeve" d="M210 80 Q240 120 245 170 Q247 200 235 230"/>
+            <line id="hem" x1="90" y1="230" x2="210" y2="230"/>
+            <rect id="pocketLeft" x="105" y="170" width="30" height="20" rx="3" opacity="0"/>
+            <rect id="pocketRight" x="165" y="170" width="30" height="20" rx="3" opacity="0"/>
+          </g>
+
+          <!-- BACK VIEW -->
+          <g id="backView" stroke="#f8f9fa" fill="none" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" style="display:none">
+            <rect id="bodyB" x="90" y="70" width="120" height="160" rx="10"/>
+            <path id="yoke" d="M90 105 Q150 85 210 105"/>
+            <line id="centerBack" x1="150" y1="70" x2="150" y2="230" stroke-dasharray="4 4"/>
+            <path id="leftSleeveB" d="M90 80 Q60 120 55 170 Q53 200 65 230"/>
+            <path id="rightSleeveB" d="M210 80 Q240 120 245 170 Q247 200 235 230"/>
+            <line id="hemB" x1="90" y1="230" x2="210" y2="230"/>
+          </g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Right side: Controls -->
+    <aside class="controls-panel">
+      <div class="card mb-5">
+        <h4>Your Specs</h4>
+        <div class="mb-2">
+          <label>Body length <span class="muted" id="lenVal">60 cm</span></label>
+          <input id="length" type="range" min="52" max="70" value="60">
+        </div>
+        <div class="mb-2">
+          <label>Chest width <span class="muted" id="widVal">52 cm</span></label>
+          <input id="width" type="range" min="46" max="65" value="52">
+        </div>
+        <div class="mb-2">
+          <label>Sleeve length <span class="muted" id="slvVal">62 cm</span></label>
+          <input id="sleeve" type="range" min="54" max="70" value="62">
+        </div>
+      </div>
+
+      <div class="card mb-5">
+        <h4>Features</h4>
+        <label>Pockets</label>
+        <div class="chips" id="pockets">
+          <button class="chip active" data-pocket="none">None</button>
+          <button class="chip" data-pocket="left">Left</button>
+          <button class="chip" data-pocket="right">Right</button>
+          <button class="chip" data-pocket="both">Both</button>
+        </div>
+      </div>
+
+      <div class="card text-center">
+        <h5 class="fw-bold mb-3">MRP: ₹2500</h5>
+        <button id="resetBtn" class="btn btn-dark w-100 py-2 rounded-pill fw-semibold mb-2">
+          <i class="bi bi-arrow-counterclockwise"></i> Reset to Default
+        </button>
+        <button id="addToCartBtn" class="btn btn-dark w-100 py-2 rounded-pill fw-semibold">
+          <i class="bi bi-cart-plus"></i> Add to Cart
+        </button>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Toast Notification -->
+  <div class="toast-container">
+    <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i class="bi bi-cart me-2"></i>
+        <strong class="me-auto">Cart</strong>
+        <small>Just now</small>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastMessage">
+        Custom jacket added to cart!
+      </div>
+    </div>
+  </div>
+
+
+
+ <!-- Footer -->
+  <footer>
+    <div>
+      <p>© 2025 HYDE. All Rights Reserved.</p>
+      <div>
+        <a href="#">Privacy Policy</a> |
+        <a href="#">Terms & Conditions</a> |
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="cart-badge.js"></script>
+
+  <script>
+    AOS.init();
+
+    const lenRange = document.getElementById('length');
+    const widRange = document.getElementById('width');
+    const slvRange = document.getElementById('sleeve');
+    const lenVal = document.getElementById('lenVal');
+    const widVal = document.getElementById('widVal');
+    const slvVal = document.getElementById('slvVal');
+    const pocketsWrap = document.getElementById('pockets');
+    const frontBtn = document.getElementById('frontBtn');
+    const backBtn = document.getElementById('backBtn');
+    const frontView = document.getElementById('frontView');
+    const backView = document.getElementById('backView');
+    const body = document.getElementById('body');
+    const zip = document.getElementById('zip');
+    const collar = document.getElementById('collar');
+    const leftSleeve = document.getElementById('leftSleeve');
+    const rightSleeve = document.getElementById('rightSleeve');
+    const hem = document.getElementById('hem');
+    const pocketLeft = document.getElementById('pocketLeft');
+    const pocketRight = document.getElementById('pocketRight');
+    const addToCartBtn = document.getElementById('addToCartBtn');
+
+    function cmToPxL(cm){ return 160 + (cm - 60) * 2.2; }
+    function cmToPxW(cm){ return 120 + (cm - 52) * 2.1; }
+    function sleeveCurve(len){
+      const delta = (len - 62) * 0.9;
+      return { q1: 120 + delta, q2: 170 + delta*0.6, endY: 230 + Math.min(10, Math.max(-10, delta)) };
+    }
+
+    function syncLabels(){
+      lenVal.textContent = lenRange.value + ' cm';
+      widVal.textContent = widRange.value + ' cm';
+      slvVal.textContent = slvRange.value + ' cm';
+    }
+
+    function updatePockets(mode){
+      const bw = parseFloat(body.getAttribute('width'));
+      const bx = parseFloat(body.getAttribute('x'));
+      const by = parseFloat(body.getAttribute('y'));
+      const bh = parseFloat(body.getAttribute('height'));
+      const pocketY = by + Math.max(120, bh - 60);
+      const pW = Math.max(24, Math.min(36, bw * 0.25));
+      const pH = 20, round = 3;
+
+      pocketLeft.setAttribute('x', bx + bw * 0.12);
+      pocketLeft.setAttribute('y', pocketY);
+      pocketLeft.setAttribute('width', pW);
+      pocketLeft.setAttribute('height', pH);
+      pocketLeft.setAttribute('rx', round);
+
+      pocketRight.setAttribute('x', bx + bw - (bw * 0.12) - pW);
+      pocketRight.setAttribute('y', pocketY);
+      pocketRight.setAttribute('width', pW);
+      pocketRight.setAttribute('height', pH);
+      pocketRight.setAttribute('rx', round);
+
+      if(mode === 'none'){ pocketLeft.setAttribute('opacity',0); pocketRight.setAttribute('opacity',0); }
+      if(mode === 'left'){ pocketLeft.setAttribute('opacity',1); pocketRight.setAttribute('opacity',0); }
+      if(mode === 'right'){ pocketLeft.setAttribute('opacity',0); pocketRight.setAttribute('opacity',1); }
+      if(mode === 'both'){ pocketLeft.setAttribute('opacity',1); pocketRight.setAttribute('opacity',1); }
+    }
+
+    function updateSVG(){
+      const l = parseInt(lenRange.value);
+      const w = parseInt(widRange.value);
+      const s = parseInt(slvRange.value);
+
+      body.setAttribute('x', 150 - cmToPxW(w)/2);
+      body.setAttribute('width', cmToPxW(w));
+      body.setAttribute('height', cmToPxL(l));
+
+      zip.setAttribute('y2', 70 + cmToPxL(l));
+      collar.setAttribute('d', `M${150-cmToPxW(w)/2} 70 Q150 40 ${150+cmToPxW(w)/2} 70`);
+
+      const sl = sleeveCurve(s);
+      leftSleeve.setAttribute('d', `M${150-cmToPxW(w)/2} 80 Q60 ${sl.q1} 55 ${sl.q2} Q53 ${sl.endY} 65 ${sl.endY}`);
+      rightSleeve.setAttribute('d', `M${150+cmToPxW(w)/2} 80 Q240 ${sl.q1} 245 ${sl.q2} Q247 ${sl.endY} 235 ${sl.endY}`);
+      hem.setAttribute('x1', 150-cmToPxW(w)/2);
+      hem.setAttribute('x2', 150+cmToPxW(w)/2);
+      hem.setAttribute('y1', 70+cmToPxL(l));
+      hem.setAttribute('y2', 70+cmToPxL(l));
+
+      updatePockets(document.querySelector('.chips .active').dataset.pocket);
+    }
+
+    // Cart management functions
+    function getCart() {
+      return JSON.parse(localStorage.getItem('cart')) || [];
+    }
+
+    function saveCart(cart) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    }
+
+    function showToast(message) {
+      const toastMessage = document.getElementById('toastMessage');
+      const cartToast = new bootstrap.Toast(document.getElementById('cartToast'));
+      
+      toastMessage.textContent = message;
+      cartToast.show();
+    }
+
+    // Add custom jacket to cart
+    function addCustomJacketToCart() {
+      const bodyLength = lenRange.value;
+      const chestWidth = widRange.value;
+      const sleeveLength = slvRange.value;
+      const pockets = document.querySelector('#pockets .chip.active').dataset.pocket;
+      
+      // Convert pocket value to readable text
+      let pocketText = '';
+      switch(pockets) {
+        case 'none':
+          pocketText = 'No Pockets';
+          break;
+        case 'left':
+          pocketText = 'Left Pocket Only';
+          break;
+        case 'right':
+          pocketText = 'Right Pocket Only';
+          break;
+        case 'both':
+          pocketText = 'Both Pockets';
+          break;
+        default:
+          pocketText = 'No Pockets';
+      }
+      
+      const cart = getCart();
+      const basePrice = 2500;
+      
+      const customData = {
+        bodyLength: bodyLength,
+        chestWidth: chestWidth,
+        sleeveLength: sleeveLength,
+        pockets: pockets,
+        view: frontBtn.classList.contains('active') ? 'front' : 'back'
+      };
+      
+      const cartItem = {
+        productId: 'custom-jacket-' + Date.now(),
+        title: 'HYDE Custom Jacket',
+        price: basePrice,
+        image: './img/logo.png', // Use your logo or a placeholder image
+        quantity: 1,
+        timestamp: new Date().toISOString(),
+        size: `Body Length: ${bodyLength}cm, Chest Width: ${chestWidth}cm, Sleeve Length: ${sleeveLength}cm, ${pocketText}`,
+        customization: customData,
+        totalPrice: basePrice,
+        isCustom: true,
+        customId: 'custom-jacket-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9)
+      };
+
+      // Add custom item to cart
+      cart.push(cartItem);
+
+      // Save cart and show success message
+      saveCart(cart);
+      showToast('Custom jacket added to cart!');
+      
+      // Redirect to cart page after a short delay
+      setTimeout(() => {
+        window.location.href = './cart.html';
+      }, 1500);
+    }
+
+    // Event listeners
+    [lenRange, widRange, slvRange].forEach(el=>{
+      el.addEventListener('input',()=>{ syncLabels(); updateSVG(); });
+    });
+
+    pocketsWrap.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click',()=>{
+        pocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+        updateSVG();
+      });
+    });
+
+    frontBtn.addEventListener('click',()=>{
+      frontView.style.display='block';
+      backView.style.display='none';
+      frontBtn.classList.add('active');
+      backBtn.classList.remove('active');
+    });
+
+    backBtn.addEventListener('click',()=>{
+      frontView.style.display='none';
+      backView.style.display='block';
+      frontBtn.classList.remove('active');
+      backBtn.classList.add('active');
+    });
+
+    document.getElementById('resetBtn').addEventListener('click',()=>{
+      lenRange.value=60;
+      widRange.value=52;
+      slvRange.value=62;
+      pocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      pocketsWrap.querySelector('[data-pocket="none"]').classList.add('active');
+      syncLabels();
+      updateSVG();
+    });
+
+    // Add to cart button event listener
+    addToCartBtn.addEventListener('click', addCustomJacketToCart);
+
+    // Initialize
+    syncLabels();
+    updateSVG();
+  </script>
+</body>
+</html>

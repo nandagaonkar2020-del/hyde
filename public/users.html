@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!-- <meta name="robots" content="noindex, nofollow"> -->
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin Panel - Users</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="nav-placeholder"></div>
+
+  <main class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>Users</h3>
+      <button class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createUserModal">Create User</button>
+    </div>
+
+    <div id="usersAlert" class="alert d-none"></div>
+
+    <div class="card">
+      <div class="card-body p-0">
+        <table class="table mb-0">
+          <thead class="table-light">
+            <tr><th>Name</th><th>Email</th><th>Role</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="usersTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Create User Modal -->
+  <div class="modal fade" id="createUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <form id="createUserForm" class="modal-content">
+        <div class="modal-header"><h5 class="modal-title">Create User</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+        <div class="modal-body">
+          <div class="mb-3"><label class="form-label">Name</label><input id="u_name" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Email</label><input id="u_email" type="email" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Password</label><input id="u_password" type="password" class="form-control" required></div>
+          <div class="mb-3"><label class="form-label">Role</label>
+            <select id="u_role" class="form-select">
+              <option value="viewer">Viewer</option>
+              <option value="editor">Editor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer"><button type="submit" class="btn btn-primary">Create</button></div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/common.js"></script>
+  <script>
+    ensureAuth();
+    insertNavbar();
+
+    const usersTbody = document.getElementById('usersTbody');
+    const usersAlert = document.getElementById('usersAlert');
+
+    async function loadUsers(){
+      try {
+        const users = await apiGet('/users');
+        usersTbody.innerHTML = users.map(u => `
+          <tr>
+            <td>${escapeHtml(u.name)}</td>
+            <td>${escapeHtml(u.email)}</td>
+            <td>${escapeHtml(u.role)}</td>
+            <td>
+              <button class="btn btn-sm btn-warning me-1" onclick="editUser('${u._id}')">Edit</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteUser('${u._id}')">Delete</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        showUsersAlert('danger', err?.message || 'Failed to load users');
+      }
+    }
+
+    window.deleteUser = async (id) => {
+      if (!confirm('Delete this user?')) return;
+      try {
+        await apiDelete(`/users/${id}`);
+        showUsersAlert('success', 'Deleted');
+        loadUsers();
+      } catch (err) {
+        showUsersAlert('danger', err?.message || 'Delete failed');
+      }
+    };
+
+    document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const payload = {
+        name: document.getElementById('u_name').value.trim(),
+        email: document.getElementById('u_email').value.trim(),
+        password: document.getElementById('u_password').value,
+        role: document.getElementById('u_role').value
+      };
+      try {
+        await apiPost('/users', payload);
+        showUsersAlert('success','User created');
+        // hide modal
+        const modalEl = bootstrap.Modal.getInstance(document.getElementById('createUserModal'));
+        modalEl.hide();
+        loadUsers();
+      } catch (err) {
+        showUsersAlert('danger', err?.message || 'Create failed');
+      }
+    });
+
+    function showUsersAlert(type, msg) {
+      usersAlert.className = `alert alert-${type}`;
+      usersAlert.classList.remove('d-none');
+      usersAlert.textContent = msg;
+      setTimeout(()=> usersAlert.classList.add('d-none'), 3500);
+    }
+
+    // small helper for edit (simple prompt-based)
+    window.editUser = async (id) => {
+      try {
+        const user = await apiGet(`/users/${id}`);
+        const newName = prompt('Name', user.name);
+        if (newName === null) return;
+        const newRole = prompt('Role (admin/editor/viewer)', user.role);
+        if (newRole === null) return;
+        await apiPut(`/users/${id}`, { name: newName.trim(), role: newRole.trim() });
+        showUsersAlert('success', 'Updated');
+        loadUsers();
+      } catch (err) {
+        showUsersAlert('danger', err?.message || 'Update failed');
+      }
+    };
+
+    loadUsers();
+  </script>
+</body>
+</html>
