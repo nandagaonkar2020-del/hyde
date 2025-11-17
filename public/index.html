@@ -336,7 +336,7 @@
             </ul>
             <a
               href="customization.html"
-              class="glass-btn px-4 py-2 fw-semibold rounded-pill shadow-sm"
+              class="glass-btn  fw-semibold "
             >
               Customize
             </a>
@@ -597,8 +597,8 @@ async function loadIndexProducts() {
                 ${actual && actual > offer ? `<del>₹${actual}</del>` : ""}
                 <span class="current-price">₹${offer}</span>
               </div>
-              <button class="btn btn-cart btn-sm" onclick="addToCart('${encodeURIComponent(productId)}', event)">
-                <i class="bi bi-cart"></i> Add to Cart
+              <button class="glass-btn" onclick="addToCart('${encodeURIComponent(productId)}', event)">
+                <i class="bi bi-cart me-2"></i> Add to Cart
               </button>
             </div>
           </div>

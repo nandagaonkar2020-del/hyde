@@ -14,6 +14,7 @@
 <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   
   <link rel="stylesheet" href="stylee.css">
+  <link rel="stylesheet" href="button.css">
   
    <style>
     /* ===== GLOBAL ===== */
@@ -376,7 +377,7 @@ body {
                     <span class="current-price">₹${offerPrice}</span>
                   </div>
                   <div class="btn-container">
-                    <button class="btn btn-cart btn-sm" onclick="addToCart('${encodeURIComponent(productId)}', event)">
+                    <button class="glass-btn" onclick="addToCart('${encodeURIComponent(productId)}', event)">
                       <i class="fas fa-shopping-cart me-1"></i> Add to Cart
                     </button>
                   </div>
