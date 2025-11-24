@@ -226,6 +226,9 @@
             <line id="hem" x1="90" y1="230" x2="210" y2="230"/>
             <rect id="pocketLeft" x="105" y="170" width="30" height="20" rx="3" opacity="0"/>
             <rect id="pocketRight" x="165" y="170" width="30" height="20" rx="3" opacity="0"/>
+            <!-- Inner Pockets -->
+            <rect id="innerPocketLeft" x="105" y="120" width="25" height="15" rx="2" opacity="0" stroke-dasharray="3,3"/>
+            <rect id="innerPocketRight" x="170" y="120" width="25" height="15" rx="2" opacity="0" stroke-dasharray="3,3"/>
           </g>
 
           <!-- BACK VIEW -->
@@ -267,6 +270,14 @@
           <button class="chip" data-pocket="left">Left</button>
           <button class="chip" data-pocket="right">Right</button>
           <button class="chip" data-pocket="both">Both</button>
+        </div>
+        
+        <label class="mt-3">Inner Pockets</label>
+        <div class="chips" id="innerPockets">
+          <button class="chip active" data-inner-pocket="none">None</button>
+          <button class="chip" data-inner-pocket="left">Left</button>
+          <button class="chip" data-inner-pocket="right">Right</button>
+          <button class="chip" data-inner-pocket="both">Both</button>
         </div>
       </div>
 
@@ -327,6 +338,7 @@
     const widVal = document.getElementById('widVal');
     const slvVal = document.getElementById('slvVal');
     const pocketsWrap = document.getElementById('pockets');
+    const innerPocketsWrap = document.getElementById('innerPockets');
     const frontBtn = document.getElementById('frontBtn');
     const backBtn = document.getElementById('backBtn');
     const frontView = document.getElementById('frontView');
@@ -339,6 +351,8 @@
     const hem = document.getElementById('hem');
     const pocketLeft = document.getElementById('pocketLeft');
     const pocketRight = document.getElementById('pocketRight');
+    const innerPocketLeft = document.getElementById('innerPocketLeft');
+    const innerPocketRight = document.getElementById('innerPocketRight');
     const addToCartBtn = document.getElementById('addToCartBtn');
 
     function cmToPxL(cm){ return 160 + (cm - 60) * 2.2; }
@@ -381,6 +395,33 @@
       if(mode === 'both'){ pocketLeft.setAttribute('opacity',1); pocketRight.setAttribute('opacity',1); }
     }
 
+    function updateInnerPockets(mode){
+      const bw = parseFloat(body.getAttribute('width'));
+      const bx = parseFloat(body.getAttribute('x'));
+      const by = parseFloat(body.getAttribute('y'));
+      const bh = parseFloat(body.getAttribute('height'));
+      const innerPocketY = by + Math.max(80, bh * 0.4);
+      const pW = Math.max(20, Math.min(30, bw * 0.2));
+      const pH = 15, round = 2;
+
+      innerPocketLeft.setAttribute('x', bx + bw * 0.15);
+      innerPocketLeft.setAttribute('y', innerPocketY);
+      innerPocketLeft.setAttribute('width', pW);
+      innerPocketLeft.setAttribute('height', pH);
+      innerPocketLeft.setAttribute('rx', round);
+
+      innerPocketRight.setAttribute('x', bx + bw - (bw * 0.15) - pW);
+      innerPocketRight.setAttribute('y', innerPocketY);
+      innerPocketRight.setAttribute('width', pW);
+      innerPocketRight.setAttribute('height', pH);
+      innerPocketRight.setAttribute('rx', round);
+
+      if(mode === 'none'){ innerPocketLeft.setAttribute('opacity',0); innerPocketRight.setAttribute('opacity',0); }
+      if(mode === 'left'){ innerPocketLeft.setAttribute('opacity',1); innerPocketRight.setAttribute('opacity',0); }
+      if(mode === 'right'){ innerPocketLeft.setAttribute('opacity',0); innerPocketRight.setAttribute('opacity',1); }
+      if(mode === 'both'){ innerPocketLeft.setAttribute('opacity',1); innerPocketRight.setAttribute('opacity',1); }
+    }
+
     function updateSVG(){
       const l = parseInt(lenRange.value);
       const w = parseInt(widRange.value);
@@ -401,7 +442,8 @@
       hem.setAttribute('y1', 70+cmToPxL(l));
       hem.setAttribute('y2', 70+cmToPxL(l));
 
-      updatePockets(document.querySelector('.chips .active').dataset.pocket);
+      updatePockets(document.querySelector('#pockets .chip.active').dataset.pocket);
+      updateInnerPockets(document.querySelector('#innerPockets .chip.active').dataset.innerPocket);
     }
 
     // Cart management functions
@@ -427,6 +469,7 @@
       const chestWidth = widRange.value;
       const sleeveLength = slvRange.value;
       const pockets = document.querySelector('#pockets .chip.active').dataset.pocket;
+      const innerPockets = document.querySelector('#innerPockets .chip.active').dataset.innerPocket;
       
       // Convert pocket value to readable text
       let pocketText = '';
@@ -447,6 +490,25 @@
           pocketText = 'No Pockets';
       }
       
+      // Convert inner pocket value to readable text
+      let innerPocketText = '';
+      switch(innerPockets) {
+        case 'none':
+          innerPocketText = 'No Inner Pockets';
+          break;
+        case 'left':
+          innerPocketText = 'Left Inner Pocket Only';
+          break;
+        case 'right':
+          innerPocketText = 'Right Inner Pocket Only';
+          break;
+        case 'both':
+          innerPocketText = 'Both Inner Pockets';
+          break;
+        default:
+          innerPocketText = 'No Inner Pockets';
+      }
+      
       const cart = getCart();
       const basePrice = 2500;
       
@@ -455,6 +517,7 @@
         chestWidth: chestWidth,
         sleeveLength: sleeveLength,
         pockets: pockets,
+        innerPockets: innerPockets,
         view: frontBtn.classList.contains('active') ? 'front' : 'back'
       };
       
@@ -465,7 +528,7 @@
         image: './img/logo.png', // Use your logo or a placeholder image
         quantity: 1,
         timestamp: new Date().toISOString(),
-        size: `Body Length: ${bodyLength}cm, Chest Width: ${chestWidth}cm, Sleeve Length: ${sleeveLength}cm, ${pocketText}`,
+        size: `Body Length: ${bodyLength}cm, Chest Width: ${chestWidth}cm, Sleeve Length: ${sleeveLength}cm, ${pocketText}, ${innerPocketText}`,
         customization: customData,
         totalPrice: basePrice,
         isCustom: true,
@@ -498,6 +561,14 @@
       });
     });
 
+    innerPocketsWrap.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click',()=>{
+        innerPocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+        updateSVG();
+      });
+    });
+
     frontBtn.addEventListener('click',()=>{
       frontView.style.display='block';
       backView.style.display='none';
@@ -518,6 +589,8 @@
       slvRange.value=62;
       pocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
       pocketsWrap.querySelector('[data-pocket="none"]').classList.add('active');
+      innerPocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+      innerPocketsWrap.querySelector('[data-inner-pocket="none"]').classList.add('active');
       syncLabels();
       updateSVG();
     });
