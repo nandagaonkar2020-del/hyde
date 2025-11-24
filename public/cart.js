@@ -194,7 +194,7 @@ function updateCartBadge() {
     message += `%0A*Total Amount:* ₹${total.toFixed(2)}%0A%0A🕒 Placed on: ${new Date().toLocaleString()}`;
     
     // Demo WhatsApp number
-    const whatsappNumber = "9326887783"; // change to your business number
+    const whatsappNumber = "9653150046"; // change to your business number
 
     // Encode and open WhatsApp
     const whatsappURL = `https://wa.me/${whatsappNumber}?text=${message}`;
