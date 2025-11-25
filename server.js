@@ -11,6 +11,7 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
 const { authMiddleware } = require('./middleware/auth');
+const commentRoutes = require('./routes/comments');
 
 const app = express();
 app.use(cors());
@@ -25,7 +26,7 @@ app.use('/api/users', authMiddleware, userRoutes);
 app.use('/api/products', productRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
+app.use('/api/comments', commentRoutes);
 // Serve product detail pages for clean URLs
 app.get('/:slug([a-zA-Z0-9-]+)', (req, res, next) => {
   const excludedRoutes = [

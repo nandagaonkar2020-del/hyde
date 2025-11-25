@@ -631,6 +631,168 @@
       margin-bottom: 1rem;
     }
 
+    /* Comment Section Styles */
+    .comment-section {
+      background: #121212;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+      margin-top: 2rem;
+    }
+
+    .rating-summary {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .average-rating {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .stars {
+      display: flex;
+      gap: 2px;
+    }
+
+    .add-comment-card {
+      transition: all 0.3s ease;
+    }
+
+    .add-comment-card:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Comment Card Styles */
+    .comment-card {
+      background: #1e1e1e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .comment-card:hover {
+      border-color: #444;
+      transform: translateY(-1px);
+    }
+
+    .comment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .comment-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .user-info h6 {
+      margin: 0;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .user-info .comment-date {
+      color: #888;
+      font-size: 0.85rem;
+    }
+
+    .comment-rating {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .comment-rating .stars {
+      color: #ffc107;
+    }
+
+    .comment-body {
+      color: #ccc;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+
+    .comment-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid #333;
+    }
+
+    .recommend-badge {
+      background: #28a745;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .comment-actions {
+      display: flex;
+      gap: 15px;
+    }
+
+    .comment-action {
+      background: none;
+      border: none;
+      color: #888;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .comment-action:hover {
+      color: #667eea;
+    }
+
+    /* Rating Input Styles */
+    .rating-input .stars-rating {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .stars-rating .star {
+      font-size: 2rem;
+      color: #444;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .stars-rating .star:hover,
+    .stars-rating .star.active {
+      color: #ffc107;
+      transform: scale(1.1);
+    }
+
     @media (max-width: 768px) {
       .action-buttons {
         flex-direction: column;
@@ -675,6 +837,27 @@
       .size-table th,
       .size-table td {
         padding: 8px 4px;
+      }
+
+      .comment-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      
+      .rating-summary {
+        justify-content: flex-start;
+      }
+      
+      .comment-meta {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+      
+      .comment-actions {
+        width: 100%;
+        justify-content: space-between;
       }
     }
 
@@ -785,6 +968,75 @@
           <div class="mt-3 text-white small">
             <p><strong>Note:</strong> Measurements are in centimeters. Chest measurement is around the fullest part. For custom sizing, use the customizer or contact support.</p>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Comment Modal -->
+  <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content" style="background: #121212; color: #e0e0e0; border: none;">
+        <div class="modal-header" style="border-bottom: 1px solid #333;">
+          <h5 class="modal-title" id="commentModalLabel" style="color: #fff;">
+            <i class="fas fa-edit me-2"></i>Write a Review
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="commentForm">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="userName" class="form-label">Your Name *</label>
+                <input type="text" class="form-control" id="userName" required 
+                       style="background: #2c2c2c; border: 1px solid #495057; color: #fff;">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="userEmail" class="form-label">Email Address *</label>
+                <input type="email" class="form-control" id="userEmail" required 
+                       style="background: #2c2c2c; border: 1px solid #495057; color: #fff;">
+              </div>
+            </div>
+            
+            <div class="mb-3">
+              <label class="form-label">Your Rating *</label>
+              <div class="rating-input">
+                <div class="stars-rating">
+                  <span class="star" data-rating="1">★</span>
+                  <span class="star" data-rating="2">★</span>
+                  <span class="star" data-rating="3">★</span>
+                  <span class="star" data-rating="4">★</span>
+                  <span class="star" data-rating="5">★</span>
+                </div>
+                <small class="text-muted mt-1 d-block" id="ratingText">Tap to rate</small>
+              </div>
+              <input type="hidden" id="userRating" name="rating" required>
+            </div>
+            
+            <div class="mb-3">
+              <label for="userComment" class="form-label">Your Review *</label>
+              <textarea class="form-control" id="userComment" rows="5" required 
+                        placeholder="Share your experience with this product..."
+                        style="background: #2c2c2c; border: 1px solid #495057; color: #fff; resize: vertical;"></textarea>
+            </div>
+            
+            <div class="form-check mb-3">
+              <input class="form-check-input" type="checkbox" id="recommendProduct">
+              <label class="form-check-label" for="recommendProduct" style="color: #ccc;">
+                I recommend this product
+              </label>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer" style="border-top: 1px solid #333;">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" 
+                  style="background: #333; border: 1px solid #444; border-radius: 25px; padding: 8px 20px;">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-primary" onclick="submitComment()" 
+                  style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; padding: 8px 30px;">
+            <i class="fas fa-paper-plane me-2"></i>Submit Review
+          </button>
         </div>
       </div>
     </div>
@@ -929,6 +1181,381 @@
         descriptionContainer.classList.add('expanded');
         button.innerHTML = '<i class="fas fa-chevron-up me-1"></i> Read Less';
       }
+    }
+
+    // Comment Section Functionality
+    let currentRating = 0;
+
+    function openCommentModal() {
+      const modal = new bootstrap.Modal(document.getElementById('commentModal'));
+      modal.show();
+      
+      // Reset form
+      document.getElementById('commentForm').reset();
+      currentRating = 0;
+      document.getElementById('userRating').value = '';
+      updateRatingStars(0);
+      updateRatingText(0);
+    }
+
+    function updateRatingStars(rating) {
+      const stars = document.querySelectorAll('.stars-rating .star');
+      stars.forEach((star, index) => {
+        if (index < rating) {
+          star.classList.add('active');
+        } else {
+          star.classList.remove('active');
+        }
+      });
+    }
+
+    function updateRatingText(rating) {
+      const ratingText = document.getElementById('ratingText');
+      const texts = [
+        'Tap to rate',
+        'Poor',
+        'Fair',
+        'Good',
+        'Very Good',
+        'Excellent'
+      ];
+      ratingText.textContent = texts[rating];
+      ratingText.style.color = rating === 0 ? '#888' : 
+                              rating <= 2 ? '#dc3545' : 
+                              rating <= 3 ? '#ffc107' : '#28a745';
+    }
+
+    // Initialize rating stars - FIXED VERSION
+    function initRatingStars() {
+      const stars = document.querySelectorAll('.stars-rating .star');
+      
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.getAttribute('data-rating'));
+          currentRating = rating;
+          document.getElementById('userRating').value = currentRating;
+          
+          // Update all stars
+          stars.forEach((s, index) => {
+            if (index < rating) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+          
+          updateRatingText(currentRating);
+        });
+        
+        star.addEventListener('mouseenter', function() {
+          const hoverRating = parseInt(this.getAttribute('data-rating'));
+          
+          // Highlight stars on hover
+          stars.forEach((s, index) => {
+            if (index < hoverRating) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+        
+        star.addEventListener('mouseleave', function() {
+          // Restore to current rating after hover
+          stars.forEach((s, index) => {
+            if (index < currentRating) {
+              s.classList.add('active');
+            } else {
+              s.classList.remove('active');
+            }
+          });
+        });
+      });
+    }
+
+    // Load comments for current product
+    async function loadComments() {
+      try {
+        const productId = getUrlParameter('id');
+        const comments = await fetchComments(productId);
+        displayComments(comments);
+        updateRatingSummary(comments);
+      } catch (error) {
+        console.error('Error loading comments:', error);
+      }
+    }
+
+    // Display comments in the UI
+    function displayComments(comments) {
+      const commentsList = document.getElementById('commentsList');
+      
+      if (!comments || comments.length === 0) {
+        commentsList.innerHTML = `
+          <div class="text-center py-5">
+            <i class="fas fa-comment-slash fa-3x mb-3" style="color: #333;"></i>
+            <h5 style="color: #666;">No reviews yet</h5>
+            <p class="text-white">Be the first to share your thoughts!</p>
+          </div>
+        `;
+        return;
+      }
+      
+      commentsList.innerHTML = comments.map(comment => `
+        <div class="comment-card" data-aos="fade-up">
+          <div class="comment-header">
+            <div class="comment-user">
+              <div class="user-avatar">
+                ${comment.userName.charAt(0).toUpperCase()}
+              </div>
+              <div class="user-info">
+                <h6>${escapeHtml(comment.userName)}</h6>
+                <div class="comment-date">${formatDate(comment.createdAt)}</div>
+              </div>
+            </div>
+            <div class="comment-rating">
+              <div class="stars">
+                ${'★'.repeat(comment.rating)}${'☆'.repeat(5 - comment.rating)}
+              </div>
+            </div>
+          </div>
+          
+          <div class="comment-body">
+            ${escapeHtml(comment.comment)}
+          </div>
+          
+          <div class="comment-meta">
+            ${comment.recommendProduct ? `
+              <span class="recommend-badge">
+                <i class="fas fa-check me-1"></i>Recommends this product
+              </span>
+            ` : '<div></div>'}
+            
+            <div class="comment-actions">
+              <button class="comment-action" onclick="likeComment('${comment._id}')">
+                <i class="far fa-thumbs-up"></i> Helpful
+              </button>
+              <button class="comment-action" onclick="reportComment('${comment._id}')">
+                <i class="far fa-flag"></i> Report
+              </button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Update rating summary
+    function updateRatingSummary(comments) {
+      if (!comments || comments.length === 0) {
+        document.querySelector('.average-rating').textContent = '0.0';
+        document.querySelector('.review-count').textContent = '0';
+        return;
+      }
+      
+      const totalRating = comments.reduce((sum, comment) => sum + comment.rating, 0);
+      const averageRating = (totalRating / comments.length).toFixed(1);
+      const reviewCount = comments.length;
+      
+      document.querySelector('.average-rating').textContent = averageRating;
+      document.querySelector('.review-count').textContent = reviewCount;
+      
+      // Update stars in rating summary
+      const summaryStars = document.querySelectorAll('.rating-summary .stars .fa-star');
+      const avgRatingNum = parseFloat(averageRating);
+      
+      summaryStars.forEach((star, index) => {
+        if (avgRatingNum >= index + 1) {
+          star.style.color = '#ffc107'; // Full star
+        } else if (avgRatingNum > index) {
+          star.style.color = '#ffc107'; // Half star (simplified)
+        } else {
+          star.style.color = '#444'; // Empty star
+        }
+      });
+    }
+
+    // Format date
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffTime = Math.abs(now - date);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 1) return 'Yesterday';
+      if (diffDays < 7) return `${diffDays} days ago`;
+      if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+      
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+
+    // REAL API functions for MongoDB
+    async function saveComment(commentData) {
+      try {
+        const response = await fetch('/api/comments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(commentData)
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to save comment');
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Error saving comment:', error);
+        throw error;
+      }
+    }
+
+    async function fetchComments(productId) {
+      try {
+        const response = await fetch(`/api/comments?productId=${productId}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch comments');
+        }
+        
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching comments:', error);
+        // Fallback to localStorage if API fails
+        return getCommentsFromLocalStorage(productId);
+      }
+    }
+
+    // LocalStorage fallback
+    function getCommentsFromLocalStorage(productId) {
+      const existingComments = JSON.parse(localStorage.getItem('productComments') || '{}');
+      const productComments = existingComments[productId] || [];
+      
+      // Sort by date, newest first
+      productComments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      return productComments;
+    }
+
+    function saveCommentToLocalStorage(commentData) {
+      return new Promise((resolve, reject) => {
+        try {
+          // Generate a unique ID for the comment
+          commentData._id = 'comment_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+          
+          // Get existing comments from localStorage
+          const existingComments = JSON.parse(localStorage.getItem('productComments') || '{}');
+          const productId = commentData.productId;
+          
+          // Initialize array for this product if it doesn't exist
+          if (!existingComments[productId]) {
+            existingComments[productId] = [];
+          }
+          
+          // Add the new comment
+          existingComments[productId].push(commentData);
+          
+          // Save back to localStorage
+          localStorage.setItem('productComments', JSON.stringify(existingComments));
+          
+          resolve(commentData);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
+    async function submitComment() {
+      const userName = document.getElementById('userName').value.trim();
+      const userEmail = document.getElementById('userEmail').value.trim();
+      const userComment = document.getElementById('userComment').value.trim();
+      const userRating = currentRating;
+      const recommendProduct = document.getElementById('recommendProduct').checked;
+      
+      // Validation
+      if (!userName || !userEmail || !userComment || !userRating) {
+        showToast('Please fill in all required fields and provide a rating.');
+        return;
+      }
+      
+      if (userRating < 1 || userRating > 5) {
+        showToast('Please select a rating between 1 and 5 stars.');
+        return;
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(userEmail)) {
+        showToast('Please enter a valid email address.');
+        return;
+      }
+      
+      // Get product ID
+      const productId = getUrlParameter('id');
+      
+      // Create comment object
+      const commentData = {
+        productId: productId,
+        userName: userName,
+        userEmail: userEmail,
+        rating: userRating,
+        comment: userComment,
+        recommendProduct: recommendProduct
+      };
+      
+      try {
+        // Show loading state
+        const submitBtn = document.querySelector('#commentModal .btn-primary');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+        submitBtn.disabled = true;
+        
+        // Save comment to database
+        await saveComment(commentData);
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('commentModal'));
+        modal.hide();
+        
+        // Show success message
+        showToast('Thank you for your review!');
+        
+        // Reload comments
+        await loadComments();
+        
+      } catch (error) {
+        console.error('Error submitting comment:', error);
+        
+        // Try localStorage as fallback
+        try {
+          await saveCommentToLocalStorage(commentData);
+          const modal = bootstrap.Modal.getInstance(document.getElementById('commentModal'));
+          modal.hide();
+          showToast('Thank you for your review! (Saved locally)');
+          await loadComments();
+        } catch (fallbackError) {
+          showToast(error.message || 'Error submitting review. Please try again.');
+        }
+      } finally {
+        // Reset button state
+        const submitBtn = document.querySelector('#commentModal .btn-primary');
+        if (submitBtn) {
+          submitBtn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Review';
+          submitBtn.disabled = false;
+        }
+      }
+    }
+
+    function likeComment(commentId) {
+      showToast('Thanks for your feedback!');
+    }
+
+    function reportComment(commentId) {
+      showToast('Comment reported. Thank you for helping us maintain quality.');
     }
 
     // Main function to load product details
@@ -1254,6 +1881,53 @@
               </div>
             </div>
           `}
+
+          <!-- Comment Section -->
+          <div class="comment-section mt-5" id="commentSection">
+            <div class="row">
+              <div class="col-12">
+                <div class="comment-header d-flex justify-content-between align-items-center mb-4">
+                  <h4 class="mb-0" style="color: #fff;">
+                    <i class="fas fa-comments me-2"></i>Customer Reviews
+                  </h4>
+                  <div class="rating-summary">
+                    <span class="average-rating" style="color: #fff; font-weight: 600;">0.0</span>
+                    <div class="stars">
+                      <i class="fas fa-star" style="color: #444;"></i>
+                      <i class="fas fa-star" style="color: #444;"></i>
+                      <i class="fas fa-star" style="color: #444;"></i>
+                      <i class="fas fa-star" style="color: #444;"></i>
+                      <i class="fas fa-star" style="color: #444;"></i>
+                    </div>
+                    <small class="text-white ms-2">(<span class="review-count">0</span> reviews)</small>
+                  </div>
+                </div>
+
+                <!-- Add Comment Button -->
+                <div class="add-comment-card mb-4">
+                  <div class="card" style="background: #1e1e1e; border: 1px solid #333;">
+                    <div class="card-body text-center p-4">
+                      <i class="fas fa-edit fa-2x mb-3" style="color: #667eea;"></i>
+                      <h5 style="color: #fff;">Share Your Experience</h5>
+                      <p class="text-white mb-3">Tell others what you think about this product</p>
+                      <button class="btn btn-primary" onclick="openCommentModal()" style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 25px; padding: 10px 30px;">
+                        <i class="fas fa-plus me-2"></i>Write a Review
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Comments List -->
+                <div class="comments-list" id="commentsList">
+                  <div class="text-center py-5">
+                    <i class="fas fa-comment-slash fa-3x mb-3" style="color: #333;"></i>
+                    <h5 style="color: #666;">No reviews yet</h5>
+                    <p class="text-white">Be the first to share your thoughts!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         `;
 
         document.getElementById('productDetailContent').innerHTML = productHtml;
@@ -1267,6 +1941,10 @@
           initCustomizer();
         }
 
+        // Initialize comment section
+        initRatingStars();
+        loadComments();
+
         // Update cart count
         updateCartCount();
 
@@ -1278,7 +1956,7 @@
             <h3>Failed to Load Product</h3>
             <p>${err.message || 'There was an error loading the product details.'}</p>
             <div class="mt-3">
-              <p class="small text-muted">Check the browser console for more details.</p>
+              <p class="small text-white">Check the browser console for more details.</p>
             </div>
             <a href="/shop.html" class="back-button mt-3">
               <i class="fas fa-arrow-left"></i> Back to Shop
