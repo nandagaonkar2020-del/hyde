@@ -581,6 +581,41 @@
       box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     }
 
+    /* Customizer Review Textarea */
+    .customizer-review-section {
+      margin-top: 1rem;
+    }
+
+    .customizer-review-section label {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .customizer-review-textarea {
+      background: #2c2c2c;
+      color: #f8f9fa;
+      border: 1px solid #495057;
+      border-radius: 10px;
+      padding: 12px;
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .customizer-review-textarea:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.3);
+      border-color: #667eea;
+    }
+
+    .customizer-review-textarea::placeholder {
+      color: #6c757d;
+    }
+
     /* Size Chart - Only for Jackets */
     .size-chart-section {
       background: #121212;
@@ -889,7 +924,7 @@
     <div id="cartToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
       <div class="toast-header">
         <i class="fas fa-shopping-cart me-2"></i>
-        <strong class="me-auto">Cart</strong>
+        <!-- <strong class="me-auto">Cart</strong> -->
         <small>Just now</small>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
@@ -972,7 +1007,9 @@
       </div>
     </div>
   </div>
-
+<button onclick="testCartFunction()" style="position: fixed; bottom: 10px; right: 10px; z-index: 9999; background: blue; color: white; padding: 10px;">
+    Test Cart
+</button>
   <!-- Add Comment Modal -->
   <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -1813,6 +1850,23 @@
                     </div>
                   </div>
 
+                  <!-- Customizer Review Section -->
+                  <div class="card">
+                    <h4><i class="fas fa-edit me-2"></i>Customization Notes</h4>
+                    <p class="small text-white mb-2">Add any special instructions or notes (optional)</p>
+                    <div class="customizer-review-section">
+                      <textarea 
+                        id="customizerReview" 
+                        class="customizer-review-textarea" 
+                        placeholder="E.g., Please make the sleeves slightly longer, add extra padding, special stitching requirements, etc."
+                        maxlength="500"
+                      ></textarea>
+                      <small class="text-white d-block mt-1">
+                        <span id="reviewCharCount">0</span>/500 characters
+                      </small>
+                    </div>
+                  </div>
+
                   <div class="card">
                     <button class="btn btn-dark w-100 py-2 rounded-pill fw-semibold mb-2" onclick="resetCustomizer()">
                       <i class="fas fa-sync-alt me-2"></i>Reset to Default
@@ -2030,90 +2084,126 @@
     };
 
     // Custom jacket add to cart function (second button in customizer)
-    function addCustomJacketToCart() {
-      const productId = getUrlParameter('id');
-      const quantity = parseInt(document.getElementById('quantityInput')?.value) || 1;
-      
-      if (!selectedSize) {
-        showToast('Please select a size first.');
-        return;
-      }
-
-      const cart = getCart();
-      const productPrice = window.productPrice || 0;
-      
-      // Get the current values from the customizer ranges
-      const bodyLength = document.getElementById('length')?.value || 60;
-      const chestWidth = document.getElementById('width')?.value || 52;
-      const sleeveLength = document.getElementById('sleeve')?.value || 62;
-      const pockets = document.querySelector('#pockets .chip.active')?.dataset.pocket || 'none';
-      const innerPockets = document.querySelector('#innerPockets .chip.active')?.dataset.innerPocket || 'none';
-      
-      // Convert pocket value to readable text
-      let pocketText = '';
-      switch(pockets) {
-        case 'none':
-          pocketText = 'No Pockets';
-          break;
-        case 'left':
-          pocketText = 'Left Pocket Only';
-          break;
-        case 'right':
-          pocketText = 'Right Pocket Only';
-          break;
-        case 'both':
-          pocketText = 'Both Pockets';
-          break;
-        default:
-          pocketText = 'No Pockets';
-      }
-      
-      // Convert inner pocket value to readable text
-      let innerPocketText = '';
-      switch(innerPockets) {
-        case 'none':
-          innerPocketText = 'No Inner Pockets';
-          break;
-        case 'left':
-          innerPocketText = 'Left Inner Pocket Only';
-          break;
-        case 'right':
-          innerPocketText = 'Right Inner Pocket Only';
-          break;
-        case 'both':
-          innerPocketText = 'Both Inner Pockets';
-          break;
-        default:
-          innerPocketText = 'No Inner Pockets';
-      }
-      
-      const customData = getCustomJacketData();
-      
-      // Create clean custom title without measurements
-      const customTitle = `${window.product.title} (Custom)`;
-      
-      let cartItem = {
-        productId: productId,
-        title: customTitle,
-        price: productPrice,
-        image: window.product.images && window.product.images.length > 0 ? window.product.images[0] : (window.product.imageUrl || '/placeholder.png'),
-        quantity: quantity,
-        timestamp: new Date().toISOString(),
-        size: `Body Length: ${bodyLength}cm, Chest Width: ${chestWidth}cm, Sleeve Length: ${sleeveLength}cm, ${pocketText}, ${innerPocketText}`,
-        customization: customData,
-        customizationFee: 200,
-        totalPrice: productPrice + 200,
-        isCustom: true,
-        customId: `${productId}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-      };
-
-      // Always add custom items as new items (they're unique)
-      cart.push(cartItem);
-
-      // Save cart and redirect to cart page
-      saveCart(cart);
-      window.location.href = '/cart.html';
+   
+    // Custom jacket add to cart function (second button in customizer) - IMPROVED VERSION
+function addCustomJacketToCart() {
+  try {
+    const productId = getUrlParameter('id');
+    const quantity = parseInt(document.getElementById('quantityInput')?.value) || 1;
+    
+    if (!selectedSize) {
+      showToast('Please select a size first.');
+      return;
     }
+
+    // Check if product data is available
+    if (!window.product || !window.productPrice) {
+      showToast('Product data not loaded. Please refresh the page.');
+      return;
+    }
+
+    const cart = getCart();
+    const productPrice = window.productPrice || 0;
+    
+    // Get the current values from the customizer ranges
+    const bodyLength = document.getElementById('length')?.value || 60;
+    const chestWidth = document.getElementById('width')?.value || 52;
+    const sleeveLength = document.getElementById('sleeve')?.value || 62;
+    const pockets = document.querySelector('#pockets .chip.active')?.dataset.pocket || 'none';
+    const innerPockets = document.querySelector('#innerPockets .chip.active')?.dataset.innerPocket || 'none';
+    
+    // Get the customizer review text
+    const customizerReviewElement = document.getElementById('customizerReview');
+    const customizerReview = customizerReviewElement ? customizerReviewElement.value.trim() : '';
+    
+    // Convert pocket value to readable text
+    let pocketText = '';
+    switch(pockets) {
+      case 'none':
+        pocketText = 'No Pockets';
+        break;
+      case 'left':
+        pocketText = 'Left Pocket Only';
+        break;
+      case 'right':
+        pocketText = 'Right Pocket Only';
+        break;
+      case 'both':
+        pocketText = 'Both Pockets';
+        break;
+      default:
+        pocketText = 'No Pockets';
+    }
+    
+    // Convert inner pocket value to readable text
+    let innerPocketText = '';
+    switch(innerPockets) {
+      case 'none':
+        innerPocketText = 'No Inner Pockets';
+        break;
+      case 'left':
+        innerPocketText = 'Left Inner Pocket Only';
+        break;
+      case 'right':
+        innerPocketText = 'Right Inner Pocket Only';
+        break;
+      case 'both':
+        innerPocketText = 'Both Inner Pockets';
+        break;
+      default:
+        innerPocketText = 'No Inner Pockets';
+    }
+    
+    const customData = getCustomJacketData();
+    const customizationFee = 200;
+    const totalPrice = (productPrice + customizationFee) * quantity;
+    
+    // Create clean custom title without measurements
+    const customTitle = `${window.product.title} (Custom)`;
+    
+    let cartItem = {
+      productId: productId,
+      title: customTitle,
+      price: productPrice,
+      image: window.product.images && window.product.images.length > 0 ? window.product.images[0] : (window.product.imageUrl || '/placeholder.png'),
+      quantity: quantity,
+      timestamp: new Date().toISOString(),
+      size: selectedSize, // Store the selected size (XS, S, M, L, etc.)
+      customSize: `Body Length: ${bodyLength}cm, Chest Width: ${chestWidth}cm, Sleeve Length: ${sleeveLength}cm, ${pocketText}, ${innerPocketText}`,
+      customization: customData,
+      customizationFee: customizationFee,
+      totalPrice: totalPrice,
+      isCustom: true,
+      customId: `custom_${productId}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+    };
+
+    // Add customizer review if provided
+    if (customizerReview) {
+      cartItem.customizerReview = customizerReview;
+      cartItem.customization.customizerReview = customizerReview;
+    }
+
+    console.log('Adding custom jacket to cart:', cartItem);
+
+    // Always add custom items as new items (they're unique)
+    cart.push(cartItem);
+
+    // Save cart and redirect to cart page
+    saveCart(cart);
+    
+    // Show success message
+    showToast('Custom jacket added to cart successfully!');
+    
+    // Small delay before redirect to allow toast to show
+    setTimeout(() => {
+      window.location.href = '/cart.html';
+    }, 1000);
+    
+  } catch (error) {
+    console.error('Error adding custom jacket to cart:', error);
+    showToast('Error adding jacket to cart. Please try again.');
+  }
+}
 
     // Customizer Functions - Only for Jackets
     let customizerInitialized = false;
@@ -2131,6 +2221,8 @@
       const pocketsWrap = document.getElementById('pockets');
       const innerPocketsWrap = document.getElementById('innerPockets');
       const customizerSizeDisplay = document.getElementById('customizerSizeDisplay');
+      const customizerReview = document.getElementById('customizerReview');
+      const reviewCharCount = document.getElementById('reviewCharCount');
 
       const frontBtn = document.getElementById('frontBtn');
       const backBtn = document.getElementById('backBtn');
@@ -2275,6 +2367,26 @@
         });
       });
 
+      // Character counter for customizer review
+      if (customizerReview) {
+        customizerReview.addEventListener('input', function() {
+          const count = this.value.length;
+          reviewCharCount.textContent = count;
+          
+          // Optional: Change color when approaching limit
+          if (count > 450) {
+            reviewCharCount.style.color = '#ff6b6b';
+          } else if (count > 400) {
+            reviewCharCount.style.color = '#ffc107';
+          } else {
+            reviewCharCount.style.color = '#fff';
+          }
+        });
+        
+        // Initialize character count
+        reviewCharCount.textContent = customizerReview.value.length;
+      }
+
       frontBtn.addEventListener('click',()=>{
         frontView.style.display='block';
         backView.style.display='none';
@@ -2297,6 +2409,14 @@
         pocketsWrap.querySelector('[data-pocket="none"]').classList.add('active');
         innerPocketsWrap.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
         innerPocketsWrap.querySelector('[data-inner-pocket="none"]').classList.add('active');
+        
+        // Reset customizer review
+        if (customizerReview) {
+          customizerReview.value = '';
+          reviewCharCount.textContent = '0';
+          reviewCharCount.style.color = '#fff';
+        }
+        
         syncLabels();
         updateSVG();
       };
@@ -2353,6 +2473,10 @@
     }
 
     function getCustomJacketData() {
+      // Get the customizer review text from the textarea - FIXED
+      const customizerReviewElement = document.getElementById('customizerReview');
+      const customizerReview = customizerReviewElement ? customizerReviewElement.value.trim() : '';
+      
       return {
         size: selectedSize || 'M',
         length: document.getElementById('length')?.value || 60,
@@ -2361,6 +2485,7 @@
         pockets: document.querySelector('#pockets .chip.active')?.dataset.pocket || 'none',
         innerPockets: document.querySelector('#innerPockets .chip.active')?.dataset.innerPocket || 'none',
         view: document.getElementById('frontBtn').classList.contains('active') ? 'front' : 'back',
+        customizerReview: customizerReview, // This now contains the actual text from textarea
         additionalCost: 200 // Customization fee
       };
     }
@@ -2388,6 +2513,19 @@
     // Global variables
     window.productPrice = 0;
     window.product = null;
+
+    function testCartFunction() {
+  console.log('=== Testing Cart Function ===');
+  console.log('Product ID:', getUrlParameter('id'));
+  console.log('Selected Size:', selectedSize);
+  console.log('Window Product:', window.product);
+  console.log('Window Product Price:', window.productPrice);
+  console.log('Current Cart:', getCart());
+  console.log('LocalStorage Cart:', localStorage.getItem('cart'));
+  console.log('=== End Test ===');
+}
+
+// Call this function in browser console to check the state
   
   </script>
 </body>
