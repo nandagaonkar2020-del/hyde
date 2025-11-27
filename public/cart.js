@@ -1,13 +1,8 @@
 function updateCartBadge() {
   const cart = JSON.parse(localStorage.getItem('cart')) || [];
   const badge = document.getElementById('cartBadge');
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  
-  if (totalItems > 0) {
-    badge.style.display = 'block';
-    badge.textContent = totalItems > 9 ? '9+' : totalItems;
-  } else {
-    badge.style.display = 'none';
+  if (badge) {
+    badge.style.display = cart.length > 0 ? 'block' : 'none';
   }
 }
 
